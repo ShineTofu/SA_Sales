@@ -429,20 +429,22 @@ function calculate(){
   const rate = (parseFloat(commissionRate.value)||0)/100;
   const commissionVal = collected * rate;
 
-  // Flat wedge rules based on soldK (kg) (FINAL RULE)
-  let wedge = 0;
-  warnMsg.innerText = "";
+// Flat wedge rules based on soldK (kg) (UPDATED RULE)
+let wedge = 0;
+warnMsg.innerText = "";
 
-  if (soldK <= 2.5) {
-    wedge = 5000;
-    if (soldK < 2 && soldK > 0) {
-      warnMsg.innerText = "Warning: less than 2kg sold.";
-    }
-  } else if (soldK <= 3) {
-    wedge = 10000;
-  } else {
-    wedge = 15000;
-  }
+// Warning stays: less than 2kg sold
+if (soldK < 2 && soldK > 0) {
+  warnMsg.innerText = "Warning: less than 2kg sold.";
+}
+
+if (soldK < 2.5) {
+  wedge = 5000;
+} else if (soldK < 3) {
+  wedge = 10000;
+} else {
+  wedge = 15000;
+}
 
   const totalVal = commissionVal + wedge - discrepancyVal;
 
