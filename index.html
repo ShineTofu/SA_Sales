@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Selling Agent Daily Sales Tool</title>
 
+<!-- PWA (offline) -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#028b43">
+
 <style>
 :root{
   --beige:#f6f3dd;
@@ -165,11 +169,11 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 <option>Farida</option>
 <option>Innocent</option>
 <option>Lydia A</option>
+<option>New 1</option>
+<option>New 2</option>
 <option>Rihanna</option>
 <option>Sarah</option>
 <option>Sunny A</option>
-<option>New 1</option>
-<option>New 2</option>
 </select>
 
 <label>Parish</label>
@@ -280,8 +284,16 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- IMPORTANT (offline): put xlsx.full.min.js in same folder -->
+<script src="./xlsx.full.min.js"></script>
+
 <script>
+/* =====================
+   Offline (PWA) enable
+   ===================== */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js");
+}
 
 const today = new Date().toISOString().split("T")[0];
 document.getElementById("date").value = today;
@@ -296,8 +308,11 @@ const parishInput = document.getElementById("parishInput");
 
 const soldKg = document.getElementById("soldKg");
 const warnMsg = document.getElementById("warnMsg");
+const errorMsg = document.getElementById("errorMsg");
 
-// Hoima parish list (alphabetical)
+/* =====================
+   Hoima parish dropdown
+   ===================== */
 const hoimaParishes = [
   "Kasingo ward",
   "Kihuukya ward",
@@ -337,16 +352,20 @@ function updateParishField(){
     parishInput.style.display = "block";
   }
 }
+
+function getParishValue(){
+  return (districtSelect.value === "Hoima") ? (parishSelect.value || "") : (parishInput.value || "");
+}
+
 districtSelect.addEventListener("change", ()=>{
   updateParishField();
   calculate();
 });
 updateParishField();
 
-function getParishValue(){
-  return (districtSelect.value === "Hoima") ? (parishSelect.value || "") : (parishInput.value || "");
-}
-
+/* =====================
+   Product price/weight
+   ===================== */
 productSelect.addEventListener("change", ()=>{
   if(productSelect.value==="Skewer"){
     price.value=1000;
@@ -394,7 +413,6 @@ function calculate(){
   const soldP = issuedP - closingP;
   const soldK = issuedK - closingK;
 
-  // show stock sold (kg)
   soldKg.value = (soldK || 0).toFixed(1);
 
   if(soldP < 0){
@@ -411,23 +429,20 @@ function calculate(){
   const rate = (parseFloat(commissionRate.value)||0)/100;
   const commissionVal = collected * rate;
 
-// Flat wedge rules based on soldK (kg)
-let wedge = 0;
-warnMsg.innerText = "";
+  // Flat wedge rules based on soldK (kg) (FINAL RULE)
+  let wedge = 0;
+  warnMsg.innerText = "";
 
-if (soldK <= 2.5) {
-  wedge = 5000;
-
-  if (soldK < 2 && soldK > 0) {
-    warnMsg.innerText = "Warning: less than 2kg sold.";
+  if (soldK <= 2.5) {
+    wedge = 5000;
+    if (soldK < 2 && soldK > 0) {
+      warnMsg.innerText = "Warning: less than 2kg sold.";
+    }
+  } else if (soldK <= 3) {
+    wedge = 10000;
+  } else {
+    wedge = 15000;
   }
-
-} else if (soldK <= 3) {
-  wedge = 10000;
-
-} else {
-  wedge = 15000;
-}
 
   const totalVal = commissionVal + wedge - discrepancyVal;
 
@@ -441,57 +456,18 @@ if (soldK <= 2.5) {
 document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calculate));
 document.querySelectorAll("select").forEach(s=>s.addEventListener("change",calculate));
 
-function recordData(){
-  if(!date.value || !district.value || !channel.value || !product.value || !sa.value){
-    alert("Please fill required fields.");
-    return;
-  }
-
-  const table = document.querySelector("#recordsTable tbody");
-  const row = table.insertRow();
-
-  // General
-  row.insertCell().innerText = date.value;
-  row.insertCell().innerText = district.value;
-  row.insertCell().innerText = channel.value;
-  row.insertCell().innerText = product.value;
-  row.insertCell().innerText = sa.value;
-  row.insertCell().innerText = getParishValue();
-
-  // Product
-  row.insertCell().innerText = price.value;
-  row.insertCell().innerText = weight.value;
-  row.insertCell().innerText = issuedPortions.value;
-  row.insertCell().innerText = issuedKg.value;
-  row.insertCell().innerText = closingPortions.value;
-  row.insertCell().innerText = closingKg.value;
-  row.insertCell().innerText = soldKg.value;
-
-  // Financial
-  row.insertCell().innerText = cashCollected.value;
-  row.insertCell().innerText = cashExpected.value;
-  row.insertCell().innerText = discrepancy.value;
-  row.insertCell().innerText = commissionRate.value;
-  row.insertCell().innerText = commission.value;
-  row.insertCell().innerText = flatWedge.value;
-
-  // Total
-  row.insertCell().innerText = total.value;
-
-  // Action
-  const del = document.createElement("button");
-  del.innerText="Delete";
-  del.onclick=()=>{
-    row.remove();
-    saveLocal();
-  };
-  row.insertCell().appendChild(del);
-
-  saveLocal();
+/* =====================
+   Save per day: SA_Sales - YYYYMMDD
+   ===================== */
+function storageKeyForCurrentDate(){
+  const d = (date.value || today).replaceAll("-", "");
+  return `SA_Sales - ${d}`;
 }
 
 function saveLocal(){
-  localStorage.setItem("salesTable",document.querySelector("#recordsTable tbody").innerHTML);
+  const key = storageKeyForCurrentDate();
+  localStorage.setItem(key, document.querySelector("#recordsTable tbody").innerHTML);
+  localStorage.setItem("SA_Sales_LAST", key);
 }
 
 function bindDeleteButtons(){
@@ -507,7 +483,9 @@ function bindDeleteButtons(){
 }
 
 function loadLocal(){
-  const data = localStorage.getItem("salesTable");
+  const last = localStorage.getItem("SA_Sales_LAST");
+  const key = last || storageKeyForCurrentDate();
+  const data = localStorage.getItem(key);
   if(data){
     document.querySelector("#recordsTable tbody").innerHTML=data;
     bindDeleteButtons();
@@ -515,26 +493,92 @@ function loadLocal(){
 }
 loadLocal();
 
+/* =====================
+   Record / Reset / Export
+   ===================== */
+function recordData(){
+  if(!date.value || !district.value || !channel.value || !product.value || !sa.value){
+    alert("Please fill required fields.");
+    return;
+  }
+
+  const table = document.querySelector("#recordsTable tbody");
+  const row = table.insertRow();
+
+  row.insertCell().innerText = date.value;
+  row.insertCell().innerText = district.value;
+  row.insertCell().innerText = channel.value;
+  row.insertCell().innerText = product.value;
+  row.insertCell().innerText = sa.value;
+  row.insertCell().innerText = getParishValue();
+
+  row.insertCell().innerText = price.value;
+  row.insertCell().innerText = weight.value;
+  row.insertCell().innerText = issuedPortions.value;
+  row.insertCell().innerText = issuedKg.value;
+  row.insertCell().innerText = closingPortions.value;
+  row.insertCell().innerText = closingKg.value;
+  row.insertCell().innerText = soldKg.value;
+
+  row.insertCell().innerText = cashCollected.value;
+  row.insertCell().innerText = cashExpected.value;
+  row.insertCell().innerText = discrepancy.value;
+  row.insertCell().innerText = commissionRate.value;
+  row.insertCell().innerText = commission.value;
+  row.insertCell().innerText = flatWedge.value;
+
+  row.insertCell().innerText = total.value;
+
+  const del = document.createElement("button");
+  del.innerText="Delete";
+  del.onclick=()=>{
+    row.remove();
+    saveLocal();
+  };
+  row.insertCell().appendChild(del);
+
+  saveLocal();
+}
+
 function resetForm(){
+  // reset all inputs (including readonly ones)
   document.querySelectorAll("input").forEach(i=>i.value="");
-  commissionRate.value=20;
-  date.value=today;
-  warnMsg.innerText="";
-  errorMsg.innerText="";
+
+  // reset selects
+  district.value = "";
+  channel.value = "";
+  product.value = "";
+  sa.value = "";
+
+  // reset parish (both modes)
+  parishInput.value = "";
+  parishSelect.value = "";
+  updateParishField();
+
+  // defaults
+  commissionRate.value = 20;
+  date.value = today;
+
+  // messages
+  warnMsg.innerText = "";
+  errorMsg.innerText = "";
+
   calculate();
 }
 
 function resetTable(){
   document.querySelector("#recordsTable tbody").innerHTML="";
-  localStorage.removeItem("salesTable");
+  const last = localStorage.getItem("SA_Sales_LAST");
+  if(last) localStorage.removeItem(last);
 }
 
 function exportTable(){
   const table = document.getElementById("recordsTable");
   const wb = XLSX.utils.table_to_book(table,{sheet:"Sales"});
-  XLSX.writeFile(wb,"Selling_Agent_Sales.xlsx");
-}
 
+  const d = (date.value || today).replaceAll("-", ""); // YYYYMMDD
+  XLSX.writeFile(wb, `SA_Sales - ${d}.xlsx`);
+}
 </script>
 </body>
 </html>
