@@ -292,7 +292,7 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
    Offline (PWA) enable
    ===================== */
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js");
+  navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
 }
 
 const today = new Date().toISOString().split("T")[0];
@@ -429,22 +429,23 @@ function calculate(){
   const rate = (parseFloat(commissionRate.value)||0)/100;
   const commissionVal = collected * rate;
 
-// Flat wedge rules based on soldK (kg) (UPDATED RULE)
-let wedge = 0;
-warnMsg.innerText = "";
+  // Flat wedge rules based on soldK (kg) (UPDATED RULE)
+  let wedge = 0;
+  warnMsg.innerText = "";
 
-// Warning stays: less than 2kg sold
-if (soldK < 2 && soldK > 0) {
-  warnMsg.innerText = "Warning: less than 2kg sold.";
-}
+  // Warning stays: less than 2kg sold
+  if (soldK < 2 && soldK > 0) {
+    warnMsg.innerText = "Warning: less than 2kg sold.";
+  }
 
-if (soldK < 2.5) {
-  wedge = 5000;
-} else if (soldK < 3) {
-  wedge = 10000;
-} else {
-  wedge = 15000;
-}
+  // Daily pay rule
+  if (soldK < 2.5) {
+    wedge = 5000;
+  } else if (soldK < 3) {
+    wedge = 10000;
+  } else {
+    wedge = 15000;
+  }
 
   const totalVal = commissionVal + wedge - discrepancyVal;
 
@@ -575,11 +576,35 @@ function resetTable(){
 }
 
 function exportTable(){
-  const table = document.getElementById("recordsTable");
-  const wb = XLSX.utils.table_to_book(table,{sheet:"Sales"});
+  try {
+    if (typeof XLSX === "undefined") {
+      alert("XLSX library not loaded. Make sure xlsx.full.min.js is in the same folder and referenced as ./xlsx.full.min.js");
+      return;
+    }
 
-  const d = (date.value || today).replaceAll("-", ""); // YYYYMMDD
-  XLSX.writeFile(wb, `SA_Sales - ${d}.xlsx`);
+    const table = document.getElementById("recordsTable");
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sales" });
+
+    const d = (date.value || today).replaceAll("-", ""); // YYYYMMDD
+    const filename = `SA_Sales - ${d}.xlsx`;
+
+    // Create file as ArrayBuffer and download via Blob (more reliable)
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+  } catch (e) {
+    console.error(e);
+    alert("Export failed. Check console for details.");
+  }
 }
 </script>
 </body>
