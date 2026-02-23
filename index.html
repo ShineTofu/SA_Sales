@@ -165,11 +165,11 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 <option>Farida</option>
 <option>Innocent</option>
 <option>Lydia A</option>
-<option>New 1</option>
-<option>New 2</option>
 <option>Rihanna</option>
 <option>Sarah</option>
 <option>Sunny A</option>
+<option>New 1</option>
+<option>New 2</option>
 </select>
 
 <label>Parish</label>
@@ -411,28 +411,23 @@ function calculate(){
   const rate = (parseFloat(commissionRate.value)||0)/100;
   const commissionVal = collected * rate;
 
-  // Flat wedge rules based on soldK (kg)
-  let wedge=0;
-  warnMsg.innerText="";
+// Flat wedge rules based on soldK (kg)
+let wedge = 0;
+warnMsg.innerText = "";
 
-  if(soldK < 2){
-    wedge = 5000;
-    if(soldK > 0){
-      warnMsg.innerText = "Warning: less than 2kg sold.";
-    } else if(soldK === 0){
-      // no warning for exactly 0 unless you want it
-      warnMsg.innerText = "";
-    }
-  } else if(soldK <= 2.5){
-    wedge = 5000;
-  } else if(soldK < 2.6){
-    // gap handling between 2.51 and 2.59 per your thresholds
-    wedge = 5000;
-  } else if(soldK <= 3){
-    wedge = 10000;
-  } else {
-    wedge = 15000;
+if (soldK <= 2.5) {
+  wedge = 5000;
+
+  if (soldK < 2 && soldK > 0) {
+    warnMsg.innerText = "Warning: less than 2kg sold.";
   }
+
+} else if (soldK <= 3) {
+  wedge = 10000;
+
+} else {
+  wedge = 15000;
+}
 
   const totalVal = commissionVal + wedge - discrepancyVal;
 
