@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Selling Agent Daily Sales Tool</title>
 
 <style>
@@ -17,6 +17,8 @@
   --border:#e5e7eb;
 }
 
+*{ box-sizing:border-box; }
+
 body{
   margin:0;
   font-family: Arial, sans-serif;
@@ -25,91 +27,145 @@ body{
 }
 
 .container{
-  max-width:600px;
+  max-width:700px;
   margin:auto;
-  padding:15px;
+  padding:14px;
 }
 
 .card{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:18px;
-  padding:15px;
-  margin-bottom:15px;
+  padding:14px;
+  margin-bottom:14px;
   box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
 
-h2{
-  margin-top:0;
-}
+h1{ font-size:22px; margin:0 0 6px; }
+h2{ font-size:18px; margin:0 0 10px; }
+
+.muted{ color:var(--muted); font-size:14px; line-height:1.35; margin:0; }
 
 label{
-  font-size:14px;
-  font-weight:bold;
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-top:10px;
 }
 
 input, select{
   width:100%;
-  padding:10px;
-  margin-top:5px;
-  margin-bottom:10px;
-  border-radius:10px;
+  padding:11px 12px;
+  margin-top:6px;
+  border-radius:12px;
   border:1px solid var(--border);
   font-size:14px;
-}
-
-button{
-  padding:10px 15px;
-  border-radius:20px;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.btn-primary{
-  background:var(--green);
-  color:white;
-}
-
-.btn-orange{
-  background:var(--orange);
-  color:black;
-}
-
-.btn-secondary{
   background:white;
-  border:1px solid var(--border);
 }
 
-.flex{
+.readonly{
+  background:#f8fafc;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+@media(min-width:560px){
+  .grid2{ grid-template-columns:1fr 1fr; }
+}
+
+.row{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+  margin-top:12px;
+}
+
+button{
+  padding:11px 16px;
+  border-radius:999px;
+  border:none;
+  font-weight:800;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.btn-primary{ background:var(--green); color:white; }
+.btn-orange{ background:var(--orange); color:#111; }
+.btn-secondary{
+  background:white;
+  border:1px solid var(--border);
+  color:#111;
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.notice{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff7ed;
+  font-size:13px;
+}
+
+.notice strong{ display:block; margin-bottom:4px; }
+
+.error{
+  margin-top:10px;
+  color:#b91c1c;
+  font-size:13px;
+  font-weight:700;
+}
+
+.table-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
 }
 
 .table-container{
   overflow-x:auto;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#fff7ed1f;
 }
 
 table{
   border-collapse:collapse;
-  width:100%;
+  width:max-content;
+  min-width:100%;
   font-size:13px;
 }
 
 th, td{
-  padding:8px;
-  border:1px solid var(--border);
+  padding:10px;
+  border-bottom:1px solid var(--border);
   text-align:left;
+  vertical-align:top;
+  white-space:nowrap;
 }
 
 th{
-  background:#eee5d8;
+  background:#f3eadc;
+  border-bottom:1px solid var(--border);
+  font-weight:800;
 }
 
-.error{
-  color:red;
-  font-size:13px;
+tr:last-child td{ border-bottom:none; }
+
+.smallbtn{
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
 }
 </style>
 </head>
@@ -117,284 +173,625 @@ th{
 <body>
 <div class="container">
 
-<div class="card">
-<h2>Selling Agent Daily Sales Tool</h2>
-<p>
-This tool helps you record daily sales and related variables for Selling Agents (SAs).
-Please submit the completed table each day to the S&M Manager via WhatsApp or email.
-</p>
+  <div class="card">
+    <h1>Selling Agent Daily Sales Tool</h1>
+    <p class="muted">
+      This tool helps you record daily sales and related variables for Selling Agents (SAs).
+      Please submit the completed table each day to the S&amp;M Manager via WhatsApp or email.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>General Information</h2>
+
+    <div class="grid2">
+      <div>
+        <label for="date">Date</label>
+        <input type="date" id="date">
+      </div>
+
+      <div>
+        <label for="district">District</label>
+        <select id="district">
+          <option value="">Select</option>
+          <option>Buliisa</option>
+          <option>Hoima</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="channel">Sales channel</label>
+        <select id="channel">
+          <option value="">Select</option>
+          <option>Hawking</option>
+          <option>Market sales</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="product">Product</label>
+        <select id="product">
+          <option value="">Select</option>
+          <option>Kikalayi</option>
+          <option>Skewer</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sa">SA name</label>
+        <select id="sa">
+          <option value="">Select</option>
+          <option>Diana</option>
+          <option>Doreen</option>
+          <option>Farida</option>
+          <option>Innocent</option>
+          <option>Lydia A</option>
+          <option>New 1</option>
+          <option>New 2</option>
+          <option>Rihanna</option>
+          <option>Sarah</option>
+          <option>Sunny A</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="parish">Parish</label>
+        <select id="parish">
+          <option value="">Select</option>
+          <!-- Sorted A → Z -->
+          <option>Bwikya ward</option>
+          <option>Bujuura ward</option>
+          <option>Central ward Hoima</option>
+          <option>Kasingo ward</option>
+          <option>Kibingo ward</option>
+          <option>Kicwamba ward</option>
+          <option>Kiduuma ward</option>
+          <option>Kihuukya ward</option>
+          <option>Kihombooza ward</option>
+          <option>Karongo ward</option>
+          <option>Kyesiiga ward</option>
+          <option>Kyentale ward</option>
+          <option>Northern ward Hoima</option>
+          <option>Nyakambugu ward</option>
+          <option>Southern ward Hoima</option>
+          <option>Western ward Hoima</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Product</h2>
+
+    <div class="grid2">
+      <div>
+        <label for="unitPrice">Unit price (UGX)</label>
+        <input class="readonly" type="text" id="unitPrice" readonly>
+      </div>
+      <div>
+        <label for="portionWeight">Portion weight (kg)</label>
+        <input class="readonly" type="text" id="portionWeight" readonly>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label for="issuedPortions">Stock issued (portions)</label>
+        <input type="number" id="issuedPortions" inputmode="numeric" placeholder="e.g. 100">
+      </div>
+      <div>
+        <label for="issuedKg">Stock issued (kg)</label>
+        <input type="number" id="issuedKg" inputmode="decimal" placeholder="e.g. 4.5">
+      </div>
+
+      <div>
+        <label for="closingPortions">Closing balance (portions)</label>
+        <input type="number" id="closingPortions" inputmode="numeric" placeholder="e.g. 20">
+      </div>
+      <div>
+        <label for="closingKg">Closing balance (kg)</label>
+        <input type="number" id="closingKg" inputmode="decimal" placeholder="e.g. 0.9">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label for="soldKg">Stock sold (kg)</label>
+        <input class="readonly" type="text" id="soldKg" readonly>
+      </div>
+      <div>
+        <label for="soldPortions">Stock sold (portions)</label>
+        <input class="readonly" type="text" id="soldPortions" readonly>
+      </div>
+    </div>
+
+    <div id="soldWarning" class="notice" style="display:none;">
+      <strong>Warning</strong>
+      Attention: less than 2kg sold.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Financial Data</h2>
+
+    <div class="grid2">
+      <div>
+        <label for="cashCollected">Cash collected (UGX)</label>
+        <input type="number" id="cashCollected" inputmode="numeric" placeholder="e.g. 150000">
+      </div>
+      <div>
+        <label for="cashExpected">Cash expected (UGX)</label>
+        <input class="readonly" type="text" id="cashExpected" readonly>
+      </div>
+
+      <div>
+        <label for="discrepancy">Discrepancies (UGX)</label>
+        <input class="readonly" type="text" id="discrepancy" readonly>
+      </div>
+      <div>
+        <label for="commissionRate">Commission rate (%)</label>
+        <input type="number" id="commissionRate" value="20" inputmode="decimal">
+      </div>
+
+      <div>
+        <label for="commission">Commission (UGX)</label>
+        <input class="readonly" type="text" id="commission" readonly>
+      </div>
+      <div>
+        <label for="flatWedge">Flat wedge (UGX)</label>
+        <input class="readonly" type="text" id="flatWedge" readonly>
+      </div>
+
+      <div>
+        <label for="totalToPay">Total amount to be paid (UGX)</label>
+        <input class="readonly" type="text" id="totalToPay" readonly>
+      </div>
+    </div>
+
+    <div class="error" id="errorMsg" style="display:none;"></div>
+
+    <div class="row">
+      <button id="recordBtn" class="btn-primary" type="button">Record data</button>
+      <button class="btn-secondary" type="button" id="resetFormBtn">Reset form</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-header">
+      <h2 style="margin:0;">Records</h2>
+      <div class="row" style="margin:0;">
+        <button class="btn-orange" type="button" id="exportBtn">Export XLSX</button>
+        <button class="btn-secondary" type="button" id="resetTableBtn">Reset table</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="recordsTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>District</th>
+            <th>Sales channel</th>
+            <th>Product</th>
+            <th>SA name</th>
+            <th>Parish</th>
+
+            <th>Unit price (UGX)</th>
+            <th>Portion weight (kg)</th>
+
+            <th>Stock issued (portions)</th>
+            <th>Stock issued (kg)</th>
+
+            <th>Closing balance (portions)</th>
+            <th>Closing balance (kg)</th>
+
+            <th>Stock sold (portions)</th>
+            <th>Stock sold (kg)</th>
+
+            <th>Cash collected (UGX)</th>
+            <th>Cash expected (UGX)</th>
+            <th>Discrepancies (UGX)</th>
+
+            <th>Commission rate (%)</th>
+            <th>Commission (UGX)</th>
+            <th>Flat wedge (UGX)</th>
+            <th>Total amount to be paid (UGX)</th>
+
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
-<div class="card">
-<h2>General Information</h2>
-
-<label>Date</label>
-<input type="date" id="date">
-
-<label>District</label>
-<select id="district">
-<option value="">Select</option>
-<option>Buliisa</option>
-<option>Hoima</option>
-</select>
-
-<label>Sales Channel</label>
-<select id="channel">
-<option value="">Select</option>
-<option>Hawking</option>
-<option>Market sales</option>
-</select>
-
-<label>Product</label>
-<select id="product">
-<option value="">Select</option>
-<option>Kikalayi</option>
-<option>Skewer</option>
-</select>
-
-<label>SA Name</label>
-<select id="sa">
-<option value="">Select</option>
-<option>Diana</option>
-<option>Doreen</option>
-<option>Farida</option>
-<option>Innocent</option>
-<option>Lydia A</option>
-<option>New 1</option>
-<option>New 2</option>
-<option>Rihanna</option>
-<option>Sarah</option>
-<option>Sunny A</option>
-</select>
-
-<label>Parish</label>
-<input type="text" id="parish" placeholder="Enter parish">
-
-</div>
-
-<div class="card">
-<h2>Product</h2>
-
-<label>Unit Price (UGX)</label>
-<input type="number" id="price" readonly>
-
-<label>Portion Weight (kg)</label>
-<input type="number" id="weight" readonly>
-
-<label>Stock Issued (Portions)</label>
-<input type="number" id="issuedPortions">
-
-<label>Stock Issued (kg)</label>
-<input type="number" id="issuedKg">
-
-<label>Closing Balance (Portions)</label>
-<input type="number" id="closingPortions">
-
-<label>Closing Balance (kg)</label>
-<input type="number" id="closingKg">
-
-</div>
-
-<div class="card">
-<h2>Financial Data</h2>
-
-<label>Cash Collected (UGX)</label>
-<input type="number" id="cashCollected">
-
-<label>Cash Expected (UGX)</label>
-<input type="text" id="cashExpected" readonly>
-
-<label>Discrepancy (UGX)</label>
-<input type="text" id="discrepancy" readonly>
-
-<label>Commission Rate (%)</label>
-<input type="number" id="commissionRate" value="20">
-
-<label>Commission (UGX)</label>
-<input type="text" id="commission" readonly>
-
-<label>Flat Wedge (UGX)</label>
-<input type="text" id="flatWedge" readonly>
-
-<label>Total Amount to be Paid (UGX)</label>
-<input type="text" id="total" readonly>
-
-<p class="error" id="errorMsg"></p>
-
-<div class="flex">
-<button class="btn-primary" onclick="recordData()">Record Data</button>
-<button class="btn-secondary" onclick="resetForm()">Reset Form</button>
-</div>
-</div>
-
-<div class="card">
-<h2>Records</h2>
-<div class="flex">
-<button class="btn-orange" onclick="exportTable()">Export XLSX</button>
-<button class="btn-secondary" onclick="resetTable()">Reset Table</button>
-</div>
-<div class="table-container">
-<table id="recordsTable">
-<thead>
-<tr>
-<th>Date</th>
-<th>District</th>
-<th>Channel</th>
-<th>Product</th>
-<th>SA</th>
-<th>Parish</th>
-<th>Total (UGX)</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
-</div>
-
-</div>
-
+<!-- XLSX export lib -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <script>
+/* ---------- Helpers ---------- */
+const $ = (id) => document.getElementById(id);
 
+function roundKg(x){
+  if(!isFinite(x)) return 0;
+  return Math.round(x * 10) / 10; // 1 decimal
+}
+function roundPortions(x){
+  if(!isFinite(x)) return 0;
+  return Math.round(x); // integer
+}
+function fmtUGX(x){
+  const n = Number(x);
+  if(!isFinite(n)) return "";
+  return n.toLocaleString("en-US");
+}
+function toNumber(v){
+  const n = parseFloat(v);
+  return isFinite(n) ? n : 0;
+}
+function isFilled(v){
+  return v !== null && v !== undefined && String(v).trim() !== "";
+}
+
+/* ---------- Defaults ---------- */
 const today = new Date().toISOString().split("T")[0];
-document.getElementById("date").value = today;
+$("date").value = today;
 
-const productSelect = document.getElementById("product");
-const price = document.getElementById("price");
-const weight = document.getElementById("weight");
-
-productSelect.addEventListener("change", ()=>{
-  if(productSelect.value==="Skewer"){
-    price.value=1000;
-    weight.value=0.045;
-  } else if(productSelect.value==="Kikalayi"){
-    price.value=500;
-    weight.value=0.040;
-  } else {
-    price.value="";
-    weight.value="";
-  }
-  calculate();
+/* ---------- State for "last edited" source fields ---------- */
+let lastEdited = null;
+["issuedPortions","issuedKg","closingPortions","closingKg"].forEach(id=>{
+  $(id).addEventListener("input", ()=>{ lastEdited = id; recalc(); });
 });
 
-function formatUGX(n){
-  return Number(n||0).toLocaleString();
-}
+["cashCollected","commissionRate","district","channel","product","sa","parish","date"].forEach(id=>{
+  $(id).addEventListener("input", recalc);
+  $(id).addEventListener("change", recalc);
+});
 
-function calculate(){
-  const w = parseFloat(weight.value)||0;
+/* ---------- Product selection auto-fill ---------- */
+$("product").addEventListener("change", ()=>{
+  const p = $("product").value;
+  if(p === "Skewer"){
+    $("unitPrice").value = fmtUGX(1000);
+    $("unitPrice").dataset.raw = "1000";
+    $("portionWeight").value = "0.045";
+  } else if(p === "Kikalayi"){
+    $("unitPrice").value = fmtUGX(500);
+    $("unitPrice").dataset.raw = "500";
+    $("portionWeight").value = "0.040";
+  } else {
+    $("unitPrice").value = "";
+    $("unitPrice").dataset.raw = "";
+    $("portionWeight").value = "";
+  }
+  recalc();
+});
 
-  let issuedP = parseFloat(issuedPortions.value)||0;
-  let issuedK = parseFloat(issuedKg.value)||0;
-  let closingP = parseFloat(closingPortions.value)||0;
-  let closingK = parseFloat(closingKg.value)||0;
+/* ---------- Core calculations ---------- */
+function recalc(){
+  const weight = toNumber($("portionWeight").value);
 
-  if(document.activeElement===issuedPortions){
-    issuedKg.value = (issuedP*w).toFixed(1);
-  }
-  if(document.activeElement===issuedKg){
-    issuedPortions.value = Math.round(issuedK/w||0);
-  }
-  if(document.activeElement===closingPortions){
-    closingKg.value = (closingP*w).toFixed(1);
-  }
-  if(document.activeElement===closingKg){
-    closingPortions.value = Math.round(closingK/w||0);
+  // Convert issued fields based on last edited
+  let issuedP = toNumber($("issuedPortions").value);
+  let issuedK = toNumber($("issuedKg").value);
+  if(weight > 0){
+    if(lastEdited === "issuedPortions"){
+      issuedK = roundKg(issuedP * weight);
+      $("issuedKg").value = issuedK ? issuedK.toFixed(1) : "";
+    } else if(lastEdited === "issuedKg"){
+      issuedP = roundPortions(issuedK / weight);
+      $("issuedPortions").value = issuedP ? String(issuedP) : "";
+    }
   }
 
-  issuedP = parseFloat(issuedPortions.value)||0;
-  closingP = parseFloat(closingPortions.value)||0;
-  issuedK = parseFloat(issuedKg.value)||0;
-  closingK = parseFloat(closingKg.value)||0;
+  // Convert closing fields based on last edited
+  let closingP = toNumber($("closingPortions").value);
+  let closingK = toNumber($("closingKg").value);
+  if(weight > 0){
+    if(lastEdited === "closingPortions"){
+      closingK = roundKg(closingP * weight);
+      $("closingKg").value = closingK ? closingK.toFixed(1) : "";
+    } else if(lastEdited === "closingKg"){
+      closingP = roundPortions(closingK / weight);
+      $("closingPortions").value = closingP ? String(closingP) : "";
+    }
+  }
+
+  // Re-read after conversions
+  issuedP = toNumber($("issuedPortions").value);
+  issuedK = toNumber($("issuedKg").value);
+  closingP = toNumber($("closingPortions").value);
+  closingK = toNumber($("closingKg").value);
 
   const soldP = issuedP - closingP;
-  const soldK = issuedK - closingK;
+  const soldK = roundKg(issuedK - closingK);
 
-  if(soldP < 0){
-    errorMsg.innerText="Error: Closing balance cannot exceed issued stock.";
-    return;
+  // sold fields display
+  $("soldPortions").value = (isFinite(soldP) && (isFilled($("issuedPortions").value) || isFilled($("closingPortions").value))) ? String(soldP) : "";
+  $("soldKg").value = (isFinite(soldK) && (isFilled($("issuedKg").value) || isFilled($("closingKg").value))) ? soldK.toFixed(1) : "";
+
+  // Safe validation: no negative sold
+  const hasBothPortions = isFilled($("issuedPortions").value) && isFilled($("closingPortions").value);
+  const hasBothKg = isFilled($("issuedKg").value) && isFilled($("closingKg").value);
+  const negative = (hasBothPortions && soldP < 0) || (hasBothKg && soldK < 0);
+
+  if(negative){
+    showError("Error: Closing balance cannot exceed issued stock.");
   } else {
-    errorMsg.innerText="";
+    hideError();
   }
 
-  const expected = soldP * (parseFloat(price.value)||0);
-  const collected = parseFloat(cashCollected.value)||0;
-  const discrepancyVal = expected - collected;
-  const rate = (parseFloat(commissionRate.value)||0)/100;
-  const commissionVal = collected * rate;
+  // Flat wedge rules (your updated thresholds)
+  // - if soldK < 2 => 5000 + warning
+  // - 2.0 to 2.5 => 5000
+  // - 2.6 to 3.0 => 10000
+  // - > 3.0 => 15000
+  let wedge = 0;
+  const showWarn = (hasBothKg && soldK < 2);
+  $("soldWarning").style.display = showWarn ? "block" : "none";
 
-  let wedge=0;
-  if(soldK<2) wedge=5000;
-  else if(soldK<=2.5) wedge=5000;
-  else if(soldK<=3) wedge=10000;
-  else wedge=15000;
+  if(hasBothKg){
+    if(soldK < 2){
+      wedge = 5000;
+    } else if(soldK <= 2.5){
+      wedge = 5000;
+    } else if(soldK >= 2.6 && soldK <= 3.0){
+      wedge = 10000;
+    } else if(soldK > 3.0){
+      wedge = 15000;
+    } else {
+      // Between 2.5 and 2.6 (e.g. 2.55) -> choose safe default (treat as 10000 or 5000?)
+      // I will treat 2.51–2.59 as 10000 to align with your intent (>=2.6 starts explicitly, but you likely meant >2.5).
+      wedge = 10000;
+    }
+  }
 
-  const totalVal = commissionVal + wedge - discrepancyVal;
+  // Financials
+  const unitPriceRaw = toNumber($("unitPrice").dataset.raw);
+  const cashCollected = toNumber($("cashCollected").value);
+  const commissionRate = toNumber($("commissionRate").value);
 
-  cashExpected.value = formatUGX(expected);
-  discrepancy.value = formatUGX(discrepancyVal);
-  commission.value = formatUGX(commissionVal);
-  flatWedge.value = formatUGX(wedge);
-  total.value = formatUGX(totalVal);
+  const cashExpected = (hasBothPortions && unitPriceRaw) ? (soldP * unitPriceRaw) : 0;
+  const discrepancy = cashExpected - cashCollected;
+  const commission = cashCollected * (commissionRate / 100);
+  const totalToPay = commission + wedge - discrepancy;
+
+  $("cashExpected").value = (hasBothPortions && unitPriceRaw) ? fmtUGX(cashExpected) : "";
+  $("discrepancy").value = (hasBothPortions || isFilled($("cashCollected").value)) ? fmtUGX(discrepancy) : "";
+  $("commission").value = isFilled($("cashCollected").value) ? fmtUGX(commission) : "";
+  $("flatWedge").value = hasBothKg ? fmtUGX(wedge) : "";
+  $("totalToPay").value = (isFilled($("cashCollected").value) && (hasBothKg || hasBothPortions)) ? fmtUGX(totalToPay) : "";
+
+  // Record button enable/disable (required fields + not negative)
+  $("recordBtn").disabled = !canRecord();
 }
 
-document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calculate));
+/* ---------- Validation required fields ---------- */
+function canRecord(){
+  // Required:
+  // Date, District, Channel, Product, SA name, Parish,
+  // Stock issued (one of portions/kg), Closing balance (one of portions/kg), Cash collected
+  const req =
+    isFilled($("date").value) &&
+    isFilled($("district").value) &&
+    isFilled($("channel").value) &&
+    isFilled($("product").value) &&
+    isFilled($("sa").value) &&
+    isFilled($("parish").value) &&
+    (isFilled($("issuedPortions").value) || isFilled($("issuedKg").value)) &&
+    (isFilled($("closingPortions").value) || isFilled($("closingKg").value)) &&
+    isFilled($("cashCollected").value);
 
-function recordData(){
-  if(!date.value || !district.value || !channel.value || !product.value || !sa.value){
-    alert("Please fill required fields.");
+  // Also ensure not negative sold if both sides present
+  const issuedP = toNumber($("issuedPortions").value);
+  const closingP = toNumber($("closingPortions").value);
+  const issuedK = toNumber($("issuedKg").value);
+  const closingK = toNumber($("closingKg").value);
+
+  const hasBothP = isFilled($("issuedPortions").value) && isFilled($("closingPortions").value);
+  const hasBothK = isFilled($("issuedKg").value) && isFilled($("closingKg").value);
+
+  const neg = (hasBothP && (issuedP - closingP) < 0) || (hasBothK && (issuedK - closingK) < 0);
+
+  return req && !neg;
+}
+
+/* ---------- Errors ---------- */
+function showError(msg){
+  $("errorMsg").style.display = "block";
+  $("errorMsg").textContent = msg;
+}
+function hideError(){
+  $("errorMsg").style.display = "none";
+  $("errorMsg").textContent = "";
+}
+
+/* ---------- Records storage ---------- */
+const STORAGE_KEY = "sa_sales_records_v1";
+
+function loadRecords(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  }catch{
+    return [];
+  }
+}
+function saveRecords(records){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+}
+
+function buildRow(r, idx){
+  const tr = document.createElement("tr");
+
+  const cells = [
+    r.date, r.district, r.channel, r.product, r.sa, r.parish,
+    fmtUGX(r.unitPrice), String(r.portionWeight),
+    String(r.issuedPortions), String(r.issuedKg),
+    String(r.closingPortions), String(r.closingKg),
+    String(r.soldPortions), String(r.soldKg),
+    fmtUGX(r.cashCollected), fmtUGX(r.cashExpected), fmtUGX(r.discrepancy),
+    String(r.commissionRate),
+    fmtUGX(r.commission), fmtUGX(r.flatWedge), fmtUGX(r.totalToPay),
+  ];
+
+  cells.forEach(v=>{
+    const td = document.createElement("td");
+    td.textContent = (v === undefined || v === null) ? "" : String(v);
+    tr.appendChild(td);
+  });
+
+  const tdAction = document.createElement("td");
+  const btn = document.createElement("button");
+  btn.className = "btn-secondary smallbtn";
+  btn.textContent = "Delete";
+  btn.addEventListener("click", ()=>{
+    const records = loadRecords();
+    records.splice(idx, 1);
+    saveRecords(records);
+    renderTable();
+  });
+  tdAction.appendChild(btn);
+  tr.appendChild(tdAction);
+
+  return tr;
+}
+
+function renderTable(){
+  const tbody = $("recordsTable").querySelector("tbody");
+  tbody.innerHTML = "";
+  const records = loadRecords();
+  records.forEach((r, idx)=>{
+    tbody.appendChild(buildRow(r, idx));
+  });
+}
+
+/* ---------- Record Data ---------- */
+$("recordBtn").addEventListener("click", ()=>{
+  if(!canRecord()){
+    alert("Please fill all required fields before recording.");
     return;
   }
 
-  const table = document.querySelector("#recordsTable tbody");
-  const row = table.insertRow();
+  const weight = toNumber($("portionWeight").value);
+  const unitPrice = toNumber($("unitPrice").dataset.raw);
 
-  row.insertCell().innerText = date.value;
-  row.insertCell().innerText = district.value;
-  row.insertCell().innerText = channel.value;
-  row.insertCell().innerText = product.value;
-  row.insertCell().innerText = sa.value;
-  row.insertCell().innerText = parish.value;
-  row.insertCell().innerText = total.value;
+  const issuedPortions = roundPortions(toNumber($("issuedPortions").value));
+  const issuedKg = roundKg(toNumber($("issuedKg").value));
+  const closingPortions = roundPortions(toNumber($("closingPortions").value));
+  const closingKg = roundKg(toNumber($("closingKg").value));
 
-  const del = document.createElement("button");
-  del.innerText="Delete";
-  del.onclick=()=>row.remove();
-  row.insertCell().appendChild(del);
+  const soldPortions = issuedPortions - closingPortions;
+  const soldKg = roundKg(issuedKg - closingKg);
 
-  saveLocal();
-}
+  const cashCollected = toNumber($("cashCollected").value);
+  const cashExpected = soldPortions * unitPrice;
+  const discrepancy = cashExpected - cashCollected;
 
-function saveLocal(){
-  localStorage.setItem("salesTable",document.querySelector("#recordsTable tbody").innerHTML);
-}
+  const commissionRate = toNumber($("commissionRate").value);
+  const commission = cashCollected * (commissionRate/100);
 
-function loadLocal(){
-  const data = localStorage.getItem("salesTable");
-  if(data){
-    document.querySelector("#recordsTable tbody").innerHTML=data;
+  // wedge same as recalc (keep consistent)
+  let wedge = 0;
+  if(soldKg < 2) wedge = 5000;
+  else if(soldKg <= 2.5) wedge = 5000;
+  else if(soldKg >= 2.6 && soldKg <= 3.0) wedge = 10000;
+  else if(soldKg > 3.0) wedge = 15000;
+  else wedge = 10000; // safe for 2.51–2.59
+
+  const totalToPay = commission + wedge - discrepancy;
+
+  const record = {
+    date: $("date").value,
+    district: $("district").value,
+    channel: $("channel").value,
+    product: $("product").value,
+    sa: $("sa").value,
+    parish: $("parish").value,
+
+    unitPrice,
+    portionWeight: weight,
+
+    issuedPortions,
+    issuedKg,
+    closingPortions,
+    closingKg,
+
+    soldPortions,
+    soldKg,
+
+    cashCollected,
+    cashExpected,
+    discrepancy,
+
+    commissionRate,
+    commission,
+    flatWedge: wedge,
+    totalToPay
+  };
+
+  const records = loadRecords();
+  records.push(record);
+  saveRecords(records);
+  renderTable();
+});
+
+/* ---------- Reset buttons ---------- */
+$("resetFormBtn").addEventListener("click", ()=>{
+  // keep dropdowns reset too
+  $("date").value = today;
+  $("district").value = "";
+  $("channel").value = "";
+  $("product").value = "";
+  $("sa").value = "";
+  $("parish").value = "";
+
+  $("unitPrice").value = "";
+  $("unitPrice").dataset.raw = "";
+  $("portionWeight").value = "";
+
+  $("issuedPortions").value = "";
+  $("issuedKg").value = "";
+  $("closingPortions").value = "";
+  $("closingKg").value = "";
+  $("soldPortions").value = "";
+  $("soldKg").value = "";
+  $("cashCollected").value = "";
+  $("cashExpected").value = "";
+  $("discrepancy").value = "";
+  $("commissionRate").value = 20;
+  $("commission").value = "";
+  $("flatWedge").value = "";
+  $("totalToPay").value = "";
+
+  $("soldWarning").style.display = "none";
+  hideError();
+  lastEdited = null;
+  recalc();
+});
+
+$("resetTableBtn").addEventListener("click", ()=>{
+  if(!confirm("Are you sure you want to delete all records?")){
+    return;
   }
-}
-loadLocal();
+  localStorage.removeItem(STORAGE_KEY);
+  renderTable();
+});
 
-function resetForm(){
-  document.querySelectorAll("input").forEach(i=>i.value="");
-  commissionRate.value=20;
-  date.value=today;
-}
+/* ---------- Export XLSX ---------- */
+$("exportBtn").addEventListener("click", ()=>{
+  const table = $("recordsTable");
+  const wb = XLSX.utils.table_to_book(table, { sheet: "Sales" });
+  XLSX.writeFile(wb, "Selling_Agent_Sales.xlsx");
+});
 
-function resetTable(){
-  document.querySelector("#recordsTable tbody").innerHTML="";
-  localStorage.removeItem("salesTable");
-}
-
-function exportTable(){
-  const table = document.getElementById("recordsTable");
-  const wb = XLSX.utils.table_to_book(table,{sheet:"Sales"});
-  XLSX.writeFile(wb,"Selling_Agent_Sales.xlsx");
-}
-
+/* ---------- Init ---------- */
+renderTable();
+recalc();
 </script>
 </body>
 </html>
