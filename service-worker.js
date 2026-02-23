@@ -1,14 +1,14 @@
 const CACHE_NAME = "sa-sales-cache-v3";
 
-// Mets ici les fichiers ESSENTIELS uniquement (ceux qui existent sûr)
+// Essentiels (doivent exister)
 const CORE = [
-  "./",                 
-  "./index.html",        
+  "./",
+  "./index.html",        // si ton fichier principal n'est pas index.html, remplace ici
   "./manifest.json",
   "./xlsx.full.min.js"
 ];
 
-// Optionnels: si un fichier n'existe pas, on l'ignore sans casser l'installation
+// Optionnels (si manquants, on ignore sans casser l'installation)
 const OPTIONAL = [
   "./icon-192.png",
   "./icon-512.png"
@@ -18,10 +18,10 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
 
-    // 1) cache core (doit réussir)
+    // Core must succeed
     await cache.addAll(CORE);
 
-    // 2) cache optional (ne doit pas casser si 404)
+    // Optional must not break install
     await Promise.allSettled(OPTIONAL.map((url) => cache.add(url)));
 
     self.skipWaiting();
