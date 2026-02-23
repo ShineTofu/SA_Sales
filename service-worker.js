@@ -1,47 +1,43 @@
-const CACHE_NAME = "sa-sales-cache-v2";
+const CACHE_NAME = "sa-sales-cache-v3";
 
-// ⚠️ Mets le vrai nom de ton fichier HTML ici
-const APP_SHELL = [
-  "./",
-  "./index.html",          // <-- change si ton fichier n'est pas index.html
-  "./xlsx.full.min.js",
+// Mets ici les fichiers ESSENTIELS uniquement (ceux qui existent sûr)
+const CORE = [
+  "./",                 
+  "./index.html",        
   "./manifest.json",
+  "./xlsx.full.min.js"
+];
+
+// Optionnels: si un fichier n'existe pas, on l'ignore sans casser l'installation
+const OPTIONAL = [
   "./icon-192.png",
   "./icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
-  );
-  self.skipWaiting();
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+
+    // 1) cache core (doit réussir)
+    await cache.addAll(CORE);
+
+    // 2) cache optional (ne doit pas casser si 404)
+    await Promise.allSettled(OPTIONAL.map((url) => cache.add(url)));
+
+    self.skipWaiting();
+  })());
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    (async () => {
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)));
-      await self.clients.claim();
-    })()
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)));
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener("fetch", (event) => {
-  const req = event.request;
-
-  // Cache-first for app shell (best offline)
   event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req).then((res) => {
-        // Optionally cache new GET requests
-        if (req.method === "GET" && res && res.status === 200) {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-        }
-        return res;
-      }).catch(() => caches.match("./")); // fallback
-    })
+    caches.match(event.request).then((cached) => cached || fetch(event.request))
   );
 });
