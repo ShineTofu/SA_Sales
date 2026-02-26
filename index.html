@@ -99,44 +99,38 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 
 </div>
 
-<!-- RESTE DU HTML IDENTIQUE -->
-
 <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
-}
-
 const districtSelect = document.getElementById("district");
 const parishSelect = document.getElementById("parishSelect");
 const parishInput = document.getElementById("parishInput");
 
 /* =====================
-   Parish lists
+   Parish lists (Alphabetical)
    ===================== */
 
 const hoimaParishes = [
-  "Kasingo ward",
-  "Kihuukya ward",
-  "Kiduuma ward",
-  "Kibingo ward",
-  "Karongo ward",
-  "Bujuura ward",
-  "Kyesiiga ward",
-  "Kihombooza ward",
-  "Western ward Hoima",
-  "Kicwamba ward",
-  "Kyentale ward",
-  "Nyakambugu ward",
   "Bwikya ward",
-  "Northern ward Hoima",
-  "Southern ward Hoima",
+  "Bujuura ward",
   "Central ward Hoima",
-  "Kibugubya"
-].sort((a,b)=>a.localeCompare(b));
+  "Kasingo ward",
+  "Kibingo ward",
+  "Kibugubya",
+  "Kicwamba ward",
+  "Kiduuma ward",
+  "Kihuukya ward",
+  "Kihombooza ward",
+  "Karongo ward",
+  "Kyentale ward",
+  "Kyesiiga ward",
+  "Northern ward Hoima",
+  "Nyakambugu ward",
+  "Southern ward Hoima",
+  "Western ward Hoima"
+];
 
 const buliisaParishes = [
   "Western ward Buliisa"
-].sort((a,b)=>a.localeCompare(b));
+];
 
 function setupParishOptions(list){
   parishSelect.innerHTML = '<option value="">Select</option>';
@@ -171,7 +165,7 @@ function getParishValue(){
 
 districtSelect.addEventListener("change", updateParishField);
 updateParishField();
-
 </script>
+
 </body>
 </html>
