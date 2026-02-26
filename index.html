@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Selling Agent Daily Sales Tool</title>
 
+<!-- PWA (offline) -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#028b43">
 
@@ -19,23 +20,106 @@
   --card:#ffffff;
   --border:#e5e7eb;
 }
-body{margin:0;font-family: Arial, sans-serif;background:var(--bg);color:var(--text);}
-.container{max-width:600px;margin:auto;padding:15px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:15px;margin-bottom:15px;box-shadow:0 4px 10px rgba(0,0,0,0.05);}
-h2{margin-top:0;}
-label{font-size:14px;font-weight:bold;}
-input, select{width:100%;padding:10px;margin-top:5px;margin-bottom:10px;border-radius:10px;border:1px solid var(--border);font-size:14px;}
-button{padding:10px 15px;border-radius:20px;border:none;font-weight:bold;cursor:pointer;}
-.btn-primary{background:var(--green);color:white;}
-.btn-orange{background:var(--orange);color:black;}
-.btn-secondary{background:white;border:1px solid var(--border);}
-.flex{display:flex;gap:10px;flex-wrap:wrap;}
-.table-container{overflow-x:auto;}
-table{border-collapse:collapse;width:100%;font-size:13px;}
-th, td{padding:8px;border:1px solid var(--border);text-align:left;}
-th{background:#eee5d8;}
-.error{color:red;font-size:13px;}
-.warning{color:#b45309;font-size:13px;}
+
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:15px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+h2{
+  margin-top:0;
+}
+
+label{
+  font-size:14px;
+  font-weight:bold;
+}
+
+input, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-size:14px;
+}
+
+button{
+  padding:10px 15px;
+  border-radius:20px;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:var(--green);
+  color:white;
+}
+
+.btn-orange{
+  background:var(--orange);
+  color:black;
+}
+
+.btn-secondary{
+  background:white;
+  border:1px solid var(--border);
+}
+
+.flex{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.table-container{
+  overflow-x:auto;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+  font-size:13px;
+}
+
+th, td{
+  padding:8px;
+  border:1px solid var(--border);
+  text-align:left;
+}
+
+th{
+  background:#eee5d8;
+}
+
+.error{
+  color:red;
+  font-size:13px;
+}
+
+.warning{
+  color:#b45309;
+  font-size:13px;
+}
 </style>
 </head>
 
@@ -95,13 +179,115 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 
 <label>Parish</label>
 <select id="parishSelect" style="display:none"></select>
-<input type="text" id="parishInput" placeholder="Enter parish">
+
+<!-- MODIF: datalist pour Buliisa (Western ward Buliisa apparait) -->
+<input type="text" id="parishInput" placeholder="Enter parish" list="buliisaParishesList">
+<datalist id="buliisaParishesList">
+  <option value="Western ward Buliisa"></option>
+</datalist>
 
 </div>
 
-<!-- RESTE DU CODE IDENTIQUE JUSQU’AU SCRIPT -->
+<div class="card">
+<h2>Product</h2>
+
+<label>Unit Price (UGX)</label>
+<input type="number" id="price" readonly>
+
+<label>Portion Weight (kg)</label>
+<input type="number" id="weight" readonly>
+
+<label>Stock Issued (Portions)</label>
+<input type="number" id="issuedPortions">
+
+<label>Stock Issued (kg)</label>
+<input type="number" id="issuedKg">
+
+<label>Closing Balance (Portions)</label>
+<input type="number" id="closingPortions">
+
+<label>Closing Balance (kg)</label>
+<input type="number" id="closingKg">
+
+<label>Stock Sold (kg)</label>
+<input type="number" id="soldKg" readonly>
+
+</div>
+
+<div class="card">
+<h2>Financial Data</h2>
+
+<label>Cash Collected (UGX)</label>
+<input type="number" id="cashCollected">
+
+<label>Cash Expected (UGX)</label>
+<input type="text" id="cashExpected" readonly>
+
+<label>Discrepancy (UGX)</label>
+<input type="text" id="discrepancy" readonly>
+
+<label>Commission Rate (%)</label>
+<input type="number" id="commissionRate" value="20">
+
+<label>Day's Commission (UGX)</label>
+<input type="text" id="commission" readonly>
+
+<p class="error" id="errorMsg"></p>
+<p class="warning" id="warnMsg"></p>
+
+<div class="flex">
+<button class="btn-primary" onclick="recordData()">Record Data</button>
+<button class="btn-secondary" onclick="resetForm()">Reset Form</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Records</h2>
+<div class="flex">
+<button class="btn-orange" onclick="exportTable()">Export XLSX</button>
+<button class="btn-secondary" onclick="resetTable()">Reset Table</button>
+</div>
+<div class="table-container">
+<table id="recordsTable">
+<thead>
+<tr>
+<th>Date</th>
+<th>District</th>
+<th>Channel</th>
+<th>Product</th>
+<th>SA</th>
+<th>Parish</th>
+
+<th>Unit Price (UGX)</th>
+<th>Portion Weight (kg)</th>
+<th>Stock Issued (Portions)</th>
+<th>Stock Issued (kg)</th>
+<th>Closing Balance (Portions)</th>
+<th>Closing Balance (kg)</th>
+<th>Stock Sold (kg)</th>
+
+<th>Cash Collected (UGX)</th>
+<th>Cash Expected (UGX)</th>
+<th>Discrepancy (UGX)</th>
+<th>Commission Rate (%)</th>
+<th>Day's Commission (UGX)</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- SheetJS (XLSX export) - CDN like your other app -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script>
+/* =====================
+   Offline (PWA) enable
+   ===================== */
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
 }
@@ -122,56 +308,43 @@ const warnMsg = document.getElementById("warnMsg");
 const errorMsg = document.getElementById("errorMsg");
 
 /* =====================
-   Parish lists
+   Hoima parish dropdown
    ===================== */
-
-const buliisaParishes = [
-  "Western ward Buliisa"
-];
-
 const hoimaParishes = [
-  "Bwikya ward",
-  "Bujuura ward",
-  "Central ward Hoima",
-  "Karongo ward",
   "Kasingo ward",
-  "Kibingo ward",
-  "Kibugubya",
-  "Kicwamba ward",
-  "Kiduuma ward",
   "Kihuukya ward",
-  "Kihombooza ward",
-  "Kyentale ward",
+  "Kiduuma ward",
+  "Kibingo ward",
+  "Karongo ward",
+  "Bujuura ward",
   "Kyesiiga ward",
-  "Northern ward Hoima",
+  "Kihombooza ward",
+  "Western ward Hoima",
+  "Kicwamba ward",
+  "Kyentale ward",
   "Nyakambugu ward",
+  "Bwikya ward",
+  "Northern ward Hoima",
   "Southern ward Hoima",
-  "Western ward Hoima"
+  "Central ward Hoima",
+  "Kibugubya"
 ].sort((a,b)=>a.localeCompare(b));
 
-function updateParishField(){
+function setupHoimaParishOptions(){
   parishSelect.innerHTML = '<option value="">Select</option>';
+  hoimaParishes.forEach(p=>{
+    const opt = document.createElement("option");
+    opt.value = p;
+    opt.textContent = p;
+    parishSelect.appendChild(opt);
+  });
+}
+setupHoimaParishOptions();
 
+function updateParishField(){
   if(districtSelect.value === "Hoima"){
-    hoimaParishes.forEach(p=>{
-      const opt = document.createElement("option");
-      opt.value = p;
-      opt.textContent = p;
-      parishSelect.appendChild(opt);
-    });
     parishInput.style.display = "none";
     parishSelect.style.display = "block";
-
-  } else if(districtSelect.value === "Buliisa"){
-    buliisaParishes.forEach(p=>{
-      const opt = document.createElement("option");
-      opt.value = p;
-      opt.textContent = p;
-      parishSelect.appendChild(opt);
-    });
-    parishInput.style.display = "none";
-    parishSelect.style.display = "block";
-
   } else {
     parishSelect.style.display = "none";
     parishInput.style.display = "block";
@@ -179,9 +352,7 @@ function updateParishField(){
 }
 
 function getParishValue(){
-  return parishSelect.style.display === "block"
-    ? (parishSelect.value || "")
-    : (parishInput.value || "");
+  return (districtSelect.value === "Hoima") ? (parishSelect.value || "") : (parishInput.value || "");
 }
 
 districtSelect.addEventListener("change", ()=>{
@@ -190,7 +361,231 @@ districtSelect.addEventListener("change", ()=>{
 });
 updateParishField();
 
-/* TOUT LE RESTE DU SCRIPT RESTE STRICTEMENT IDENTIQUE */
+/* =====================
+   Product price/weight
+   ===================== */
+productSelect.addEventListener("change", ()=>{
+  if(productSelect.value==="Skewer"){
+    price.value=1000;
+    weight.value=0.045;
+  } else if(productSelect.value==="Kikalayi"){
+    price.value=500;
+    weight.value=0.040;
+  } else {
+    price.value="";
+    weight.value="";
+  }
+  calculate();
+});
+
+function formatUGX(n){
+  return Number(n||0).toLocaleString();
+}
+
+function calculate(){
+  const w = parseFloat(weight.value)||0;
+
+  let issuedP = parseFloat(issuedPortions.value)||0;
+  let issuedK = parseFloat(issuedKg.value)||0;
+  let closingP = parseFloat(closingPortions.value)||0;
+  let closingK = parseFloat(closingKg.value)||0;
+
+  if(document.activeElement===issuedPortions){
+    issuedKg.value = (issuedP*w).toFixed(1);
+  }
+  if(document.activeElement===issuedKg){
+    issuedPortions.value = Math.round(issuedK/w||0);
+  }
+  if(document.activeElement===closingPortions){
+    closingKg.value = (closingP*w).toFixed(1);
+  }
+  if(document.activeElement===closingKg){
+    closingPortions.value = Math.round(closingK/w||0);
+  }
+
+  issuedP = parseFloat(issuedPortions.value)||0;
+  closingP = parseFloat(closingPortions.value)||0;
+  issuedK = parseFloat(issuedKg.value)||0;
+  closingK = parseFloat(closingKg.value)||0;
+
+  const soldP = issuedP - closingP;
+  const soldK = issuedK - closingK;
+
+  soldKg.value = (soldK || 0).toFixed(1);
+
+  if(soldP < 0){
+    errorMsg.innerText="Error: Closing balance cannot exceed issued stock.";
+    warnMsg.innerText="";
+    return;
+  } else {
+    errorMsg.innerText="";
+  }
+
+  const expected = soldP * (parseFloat(price.value)||0);
+  const collected = parseFloat(cashCollected.value)||0;
+  const discrepancyVal = expected - collected;
+
+  const rate = (parseFloat(commissionRate.value)||0)/100;
+  const commissionVal = collected * rate;
+
+  // Warning stays: less than 2kg sold
+  warnMsg.innerText = "";
+  if (soldK < 2 && soldK > 0) {
+    warnMsg.innerText = "Warning: less than 2kg sold.";
+  }
+
+  cashExpected.value = formatUGX(expected);
+  discrepancy.value = formatUGX(discrepancyVal);
+  commission.value = formatUGX(commissionVal);
+}
+
+document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calculate));
+document.querySelectorAll("select").forEach(s=>s.addEventListener("change",calculate));
+
+/* =====================
+   Save per day: SA_Sales - YYYYMMDD
+   ===================== */
+function storageKeyForCurrentDate(){
+  const d = (date.value || today).replaceAll("-", "");
+  return `SA_Sales - ${d}`;
+}
+
+function saveLocal(){
+  const key = storageKeyForCurrentDate();
+  localStorage.setItem(key, document.querySelector("#recordsTable tbody").innerHTML);
+  localStorage.setItem("SA_Sales_LAST", key);
+}
+
+function bindDeleteButtons(){
+  document.querySelectorAll("#recordsTable tbody tr").forEach(tr=>{
+    const btn = tr.querySelector("button");
+    if(btn){
+      btn.onclick=()=>{
+        tr.remove();
+        saveLocal();
+      };
+    }
+  });
+}
+
+function loadLocal(){
+  const last = localStorage.getItem("SA_Sales_LAST");
+  const key = last || storageKeyForCurrentDate();
+  const data = localStorage.getItem(key);
+  if(data){
+    document.querySelector("#recordsTable tbody").innerHTML=data;
+    bindDeleteButtons();
+  }
+}
+loadLocal();
+
+/* =====================
+   Record / Reset / Export
+   ===================== */
+function recordData(){
+  if(!date.value || !district.value || !channel.value || !product.value || !sa.value){
+    alert("Please fill required fields.");
+    return;
+  }
+
+  const table = document.querySelector("#recordsTable tbody");
+  const row = table.insertRow();
+
+  row.insertCell().innerText = date.value;
+  row.insertCell().innerText = district.value;
+  row.insertCell().innerText = channel.value;
+  row.insertCell().innerText = product.value;
+  row.insertCell().innerText = sa.value;
+  row.insertCell().innerText = getParishValue();
+
+  row.insertCell().innerText = price.value;
+  row.insertCell().innerText = weight.value;
+  row.insertCell().innerText = issuedPortions.value;
+  row.insertCell().innerText = issuedKg.value;
+  row.insertCell().innerText = closingPortions.value;
+  row.insertCell().innerText = closingKg.value;
+  row.insertCell().innerText = soldKg.value;
+
+  row.insertCell().innerText = cashCollected.value;
+  row.insertCell().innerText = cashExpected.value;
+  row.insertCell().innerText = discrepancy.value;
+  row.insertCell().innerText = commissionRate.value;
+  row.insertCell().innerText = commission.value;
+
+  const del = document.createElement("button");
+  del.innerText="Delete";
+  del.onclick=()=>{
+    row.remove();
+    saveLocal();
+  };
+  row.insertCell().appendChild(del);
+
+  saveLocal();
+}
+
+function resetForm(){
+  // reset all inputs (including readonly ones)
+  document.querySelectorAll("input").forEach(i=>i.value="");
+
+  // reset selects
+  district.value = "";
+  channel.value = "";
+  product.value = "";
+  sa.value = "";
+
+  // reset parish (both modes)
+  parishInput.value = "";
+  parishSelect.value = "";
+  updateParishField();
+
+  // defaults
+  commissionRate.value = 20;
+  date.value = today;
+
+  // messages
+  warnMsg.innerText = "";
+  errorMsg.innerText = "";
+
+  calculate();
+}
+
+function resetTable(){
+  document.querySelector("#recordsTable tbody").innerHTML="";
+  const last = localStorage.getItem("SA_Sales_LAST");
+  if(last) localStorage.removeItem(last);
+}
+
+function exportTable(){
+  try {
+    if (typeof XLSX === "undefined") {
+      alert("XLSX library not loaded. Please connect once to the internet (first load) so it can be cached.");
+      return;
+    }
+
+    const table = document.getElementById("recordsTable");
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sales" });
+
+    const d = (date.value || today).replaceAll("-", ""); // YYYYMMDD
+    const filename = `SA_Sales - ${d}.xlsx`;
+
+    // Create file as ArrayBuffer and download via Blob (more reliable)
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+  } catch (e) {
+    console.error(e);
+    alert("Export failed. Check console for details.");
+  }
+}
 </script>
 </body>
 </html>
