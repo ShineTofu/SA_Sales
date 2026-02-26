@@ -224,14 +224,8 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 <label>Commission Rate (%)</label>
 <input type="number" id="commissionRate" value="20">
 
-<label>Commission (UGX)</label>
+<label>Day's Commission (UGX)</label>
 <input type="text" id="commission" readonly>
-
-<label>Flat Wedge (UGX)</label>
-<input type="text" id="flatWedge" readonly>
-
-<label>Total Amount to be Paid (UGX)</label>
-<input type="text" id="total" readonly>
 
 <p class="error" id="errorMsg"></p>
 <p class="warning" id="warnMsg"></p>
@@ -271,10 +265,7 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 <th>Cash Expected (UGX)</th>
 <th>Discrepancy (UGX)</th>
 <th>Commission Rate (%)</th>
-<th>Commission (UGX)</th>
-<th>Flat Wedge (UGX)</th>
-
-<th>Total (UGX)</th>
+<th>Day's Commission (UGX)</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -427,6 +418,7 @@ function calculate(){
   const expected = soldP * (parseFloat(price.value)||0);
   const collected = parseFloat(cashCollected.value)||0;
   const discrepancyVal = expected - collected;
+
   const rate = (parseFloat(commissionRate.value)||0)/100;
   const commissionVal = collected * rate;
 
@@ -436,23 +428,9 @@ function calculate(){
     warnMsg.innerText = "Warning: less than 2kg sold.";
   }
 
-  // Daily pay rule (your latest)
-  let wedge = 0;
-  if (soldK < 2.5) {
-    wedge = 5000;
-  } else if (soldK < 3) {
-    wedge = 10000;
-  } else {
-    wedge = 15000;
-  }
-
-  const totalVal = commissionVal + wedge - discrepancyVal;
-
   cashExpected.value = formatUGX(expected);
   discrepancy.value = formatUGX(discrepancyVal);
   commission.value = formatUGX(commissionVal);
-  flatWedge.value = formatUGX(wedge);
-  total.value = formatUGX(totalVal);
 }
 
 document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calculate));
@@ -527,9 +505,6 @@ function recordData(){
   row.insertCell().innerText = discrepancy.value;
   row.insertCell().innerText = commissionRate.value;
   row.insertCell().innerText = commission.value;
-  row.insertCell().innerText = flatWedge.value;
-
-  row.insertCell().innerText = total.value;
 
   const del = document.createElement("button");
   del.innerText="Delete";
