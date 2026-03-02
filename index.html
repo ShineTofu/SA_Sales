@@ -7,131 +7,334 @@
 
 <!-- PWA (offline) -->
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#028b43">
+<meta name="theme-color" content="#0B8F45">
 
 <style>
+/* =========================
+   PowerBI-like Dashboard UI
+   (VISUAL ONLY CHANGES)
+   ========================= */
+
+/* Palette inspired by your PowerBI dashboard screenshot */
 :root{
-  --beige:#f6f3dd;
-  --green:#028b43;
-  --orange:#f8a925;
-  --bg:var(--beige);
-  --text:#0b1220;
-  --muted:#475569;
+  --brand-green:#0B8F45;     /* primary green */
+  --brand-green-2:#0A7F3E;   /* darker for hover */
+  --mint-bg:#DFF2D8;         /* light green background */
+  --mint-bg-2:#CFEBC5;       /* slightly deeper for sections */
   --card:#ffffff;
-  --border:#e5e7eb;
+  --card-tint:#F6FAF5;       /* subtle card tint */
+  --text:#0b1220;
+  --muted:#64748b;
+  --border:#D7E3D4;
+  --shadow:0 8px 18px rgba(11, 18, 32, 0.08);
+  --shadow-soft:0 6px 14px rgba(11, 18, 32, 0.06);
+  --accent:#F2A11F;          /* orange accent */
+  --accent-2:#FFD07A;        /* warm highlight */
+  --danger:#DC2626;
+  --warning:#B45309;
+
+  --radius-card:18px;
+  --radius-input:12px;
+  --radius-btn:999px;
+
+  --header-height:64px;
 }
 
+/* Page background with soft green gradient like dashboard canvas */
 body{
   margin:0;
   font-family: Arial, sans-serif;
-  background:var(--bg);
+  background:
+    radial-gradient(900px 380px at 20% 0%, rgba(255,255,255,0.7), rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, var(--mint-bg) 0%, var(--mint-bg-2) 100%);
   color:var(--text);
 }
 
-.container{
-  max-width:600px;
-  margin:auto;
-  padding:15px;
+/* Sticky top bar like PowerBI report header */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  height:var(--header-height);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 14px;
+  background:var(--brand-green);
+  box-shadow:0 10px 24px rgba(0,0,0,0.18);
 }
 
+.topbar .title{
+  color:#fff;
+  font-weight:800;
+  letter-spacing:.3px;
+  text-align:center;
+  line-height:1.1;
+  font-size:18px;
+}
+
+/* Layout */
+.container{
+  max-width:780px; /* slightly wider, dashboard feel */
+  margin:auto;
+  padding:14px;
+}
+
+/* Card style close to PowerBI visuals tiles */
 .card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:18px;
-  padding:15px;
-  margin-bottom:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+  border-radius:var(--radius-card);
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow-soft);
+  position:relative;
+  overflow:hidden;
 }
 
+/* Thin accent line on top of cards (like KPI tiles) */
+.card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  height:4px;
+  width:100%;
+  background:linear-gradient(90deg, var(--accent) 0%, rgba(242,161,31,0) 65%);
+  opacity:.95;
+}
+
+/* Headings in green like the report section titles */
 h2{
-  margin-top:0;
+  margin:0 0 10px 0;
+  color:var(--brand-green);
+  font-size:18px;
+  font-weight:800;
 }
 
+p{
+  margin:8px 0 0 0;
+  color:var(--muted);
+  line-height:1.35;
+  font-size:13.5px;
+}
+
+/* Labels like PowerBI slicer labels */
 label{
-  font-size:14px;
-  font-weight:bold;
+  font-size:13px;
+  font-weight:800;
+  color:#0f172a;
+  display:block;
+  margin-top:10px;
+  margin-bottom:6px;
 }
 
+/* Inputs: rounded + subtle shadows like slicers */
 input, select{
   width:100%;
-  padding:10px;
-  margin-top:5px;
-  margin-bottom:10px;
-  border-radius:10px;
+  padding:11px 12px;
+  border-radius:var(--radius-input);
   border:1px solid var(--border);
   font-size:14px;
+  background:linear-gradient(180deg, #ffffff 0%, var(--card-tint) 100%);
+  box-shadow:0 2px 8px rgba(11, 18, 32, 0.04);
+  outline:none;
+  transition:box-shadow .15s ease, border-color .15s ease, transform .05s ease;
 }
 
+/* Focus state in brand green */
+input:focus, select:focus{
+  border-color:rgba(11,143,69,0.55);
+  box-shadow:0 0 0 4px rgba(11,143,69,0.14), 0 6px 14px rgba(11, 18, 32, 0.06);
+}
+
+/* Readonly style like disabled KPI */
+input[readonly]{
+  background:linear-gradient(180deg, #F1F7F2 0%, #EAF4EA 100%);
+  color:#1f2937;
+  border-color:#CFE3D2;
+}
+
+/* Buttons: pill, dashboard-like */
 button{
-  padding:10px 15px;
-  border-radius:20px;
+  padding:10px 14px;
+  border-radius:var(--radius-btn);
   border:none;
-  font-weight:bold;
+  font-weight:800;
   cursor:pointer;
+  transition:transform .06s ease, box-shadow .15s ease, filter .15s ease;
+  box-shadow:0 8px 16px rgba(11, 18, 32, 0.12);
+}
+
+button:active{
+  transform:translateY(1px);
+  filter:brightness(.98);
 }
 
 .btn-primary{
-  background:var(--green);
+  background:linear-gradient(180deg, var(--brand-green) 0%, var(--brand-green-2) 100%);
   color:white;
 }
 
+.btn-primary:hover{
+  box-shadow:0 10px 18px rgba(11,143,69,0.25);
+}
+
 .btn-orange{
-  background:var(--orange);
-  color:black;
+  background:linear-gradient(180deg, var(--accent) 0%, #E89416 100%);
+  color:#1f2937;
+}
+
+.btn-orange:hover{
+  box-shadow:0 10px 18px rgba(242,161,31,0.25);
 }
 
 .btn-secondary{
-  background:white;
+  background:linear-gradient(180deg, #FFFFFF 0%, #F4F7F7 100%);
+  color:#0f172a;
   border:1px solid var(--border);
+  box-shadow:0 8px 16px rgba(11, 18, 32, 0.08);
 }
 
+.btn-secondary:hover{
+  box-shadow:0 10px 18px rgba(11, 18, 32, 0.10);
+}
+
+/* Flex row like dashboard button bars */
 .flex{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
+  margin-top:10px;
 }
 
+/* Table container like embedded visual */
 .table-container{
   overflow-x:auto;
+  margin-top:10px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#fff;
+  box-shadow:0 10px 18px rgba(11, 18, 32, 0.06);
 }
 
+/* Table style: clean, soft grid */
 table{
-  border-collapse:collapse;
+  border-collapse:separate;
+  border-spacing:0;
   width:100%;
   font-size:13px;
+  min-width:900px; /* so it scrolls like BI table */
 }
 
-th, td{
-  padding:8px;
-  border:1px solid var(--border);
-  text-align:left;
-}
-
+/* Header with pale green and green text */
 th{
-  background:#eee5d8;
+  position:sticky;
+  top:0;
+  background:linear-gradient(180deg, #EAF6EA 0%, #DFF1DE 100%);
+  color:var(--brand-green);
+  font-weight:900;
+  text-transform:none;
+  letter-spacing:.2px;
+  border-bottom:1px solid var(--border);
 }
 
+/* Cells */
+th, td{
+  padding:10px 10px;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  white-space:nowrap;
+}
+
+/* Rounded corners for table */
+thead tr th:first-child{ border-top-left-radius:14px; }
+thead tr th:last-child{ border-top-right-radius:14px; border-right:none; }
+tbody tr td:last-child{ border-right:none; }
+
+/* Zebra rows subtle */
+tbody tr:nth-child(even) td{
+  background:#FBFDFB;
+}
+
+/* Row hover like BI highlight */
+tbody tr:hover td{
+  background:#F0FAF1;
+}
+
+/* Delete button in table: small pill */
+#recordsTable button{
+  padding:8px 10px;
+  border-radius:999px;
+  border:1px solid rgba(220,38,38,0.35);
+  background:linear-gradient(180deg, #fff 0%, #fff5f5 100%);
+  color:var(--danger);
+  box-shadow:none;
+  font-weight:900;
+}
+
+#recordsTable button:hover{
+  background:linear-gradient(180deg, #fff5f5 0%, #ffe8e8 100%);
+}
+
+/* Messages */
 .error{
-  color:red;
+  color:var(--danger);
   font-size:13px;
+  font-weight:800;
+  margin-top:8px;
 }
 
 .warning{
-  color:#b45309;
+  color:var(--warning);
   font-size:13px;
+  font-weight:800;
+  margin-top:6px;
+}
+
+/* Small "kpi tile" feel for the first intro card */
+.hero{
+  background:
+    radial-gradient(560px 220px at 15% 10%, rgba(242,161,31,0.18), rgba(242,161,31,0) 60%),
+    linear-gradient(180deg, #ffffff 0%, #F5FBF6 100%);
+  box-shadow:var(--shadow);
+}
+
+.hero::before{
+  height:6px;
+}
+
+/* Make cards look like tiles spacing */
+.card + .card{
+  margin-top:12px;
+}
+
+/* Mobile tweaks */
+@media (max-width:420px){
+  .topbar .title{ font-size:16px; }
+  h2{ font-size:16px; }
+  .container{ padding:12px; }
+  button{ width:100%; }
 }
 </style>
 </head>
 
 <body>
+
+<!-- PowerBI-like header -->
+<div class="topbar">
+  <div class="title">Selling Agent Daily Sales Tool</div>
+</div>
+
 <div class="container">
 
-<div class="card">
-<h2>Selling Agent Daily Sales Tool</h2>
-<p>
-This tool helps you record daily sales and related variables for Selling Agents (SAs).
-Please submit the completed table each day to the S&M Manager via WhatsApp or email.
-</p>
+<div class="card hero">
+  <h2>Overview</h2>
+  <p>
+    This tool helps you record daily sales and related variables for Selling Agents (SAs).
+    Please submit the completed table each day to the S&amp;M Manager via WhatsApp or email.
+  </p>
 </div>
 
 <div class="card">
@@ -236,16 +439,16 @@ Please submit the completed table each day to the S&M Manager via WhatsApp or em
 <p class="warning" id="warnMsg"></p>
 
 <div class="flex">
-<button class="btn-primary" onclick="recordData()">Record Data</button>
-<button class="btn-secondary" onclick="resetForm()">Reset Form</button>
+  <button class="btn-primary" onclick="recordData()">Record Data</button>
+  <button class="btn-secondary" onclick="resetForm()">Reset Form</button>
 </div>
 </div>
 
 <div class="card">
 <h2>Records</h2>
 <div class="flex">
-<button class="btn-orange" onclick="exportTable()">Export XLSX</button>
-<button class="btn-secondary" onclick="resetTable()">Reset Table</button>
+  <button class="btn-orange" onclick="exportTable()">Export XLSX</button>
+  <button class="btn-secondary" onclick="resetTable()">Reset Table</button>
 </div>
 <div class="table-container">
 <table id="recordsTable">
