@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,6 +297,7 @@ tbody tr:hover td{ background:#F0FAF1; }
   <option>Baruza Stephen</option>
   <option>Kabagenyi Faridah</option>
   <option>Katusiime Janepher</option>
+  <option>Katusiime Racheal</option>
   <option>Kemigisha Rosette</option>
   <option>Kiiza Majory</option>
   <option>Mugisa Allan</option>
@@ -309,6 +309,7 @@ tbody tr:hover td{ background:#F0FAF1; }
   <option>Nkyanungi Joyce</option>
   <option>Nuwamanya Robert</option>
   <option>Ofoyrwoth Gideon</option>
+  <option>Ritah Kobusingye</option>
   <option>Tugozagane Jipe</option>
   <option>Tumusiime Brighton</option>
 </select>
@@ -392,13 +393,9 @@ tbody tr:hover td{ background:#F0FAF1; }
 <th>District</th>
 <th>Channel</th>
 <th>Product</th>
-
-<!-- SA ID before SA Name -->
 <th>SA ID</th>
 <th>SA</th>
-
 <th>Parish</th>
-
 <th>Unit Price (UGX)</th>
 <th>Portion Weight (kg)</th>
 <th>Stock Issued (Portions)</th>
@@ -406,7 +403,6 @@ tbody tr:hover td{ background:#F0FAF1; }
 <th>Closing Balance (Portions)</th>
 <th>Closing Balance (kg)</th>
 <th>Stock Sold (kg)</th>
-
 <th>Cash Collected (UGX)</th>
 <th>Cash Expected (UGX)</th>
 <th>Discrepancy (UGX)</th>
@@ -432,7 +428,12 @@ if ("serviceWorker" in navigator) {
 const today = new Date().toISOString().split("T")[0];
 document.getElementById("date").value = today;
 
+const date = document.getElementById("date");
+const district = document.getElementById("district");
+const channel = document.getElementById("channel");
 const productSelect = document.getElementById("product");
+const sa = document.getElementById("sa");
+
 const price = document.getElementById("price");
 const weight = document.getElementById("weight");
 
@@ -440,7 +441,18 @@ const districtSelect = document.getElementById("district");
 const parishSelect = document.getElementById("parishSelect");
 const parishInput = document.getElementById("parishInput");
 
+const issuedPortions = document.getElementById("issuedPortions");
+const issuedKg = document.getElementById("issuedKg");
+const closingPortions = document.getElementById("closingPortions");
+const closingKg = document.getElementById("closingKg");
 const soldKg = document.getElementById("soldKg");
+
+const cashCollected = document.getElementById("cashCollected");
+const cashExpected = document.getElementById("cashExpected");
+const discrepancy = document.getElementById("discrepancy");
+const commissionRate = document.getElementById("commissionRate");
+const commission = document.getElementById("commission");
+
 const warnMsg = document.getElementById("warnMsg");
 const errorMsg = document.getElementById("errorMsg");
 
@@ -464,7 +476,10 @@ const saIdByName = {
   "Nuwamanya Robert": "SM016",
   "Ofoyrwoth Gideon": "SM017",
   "Tugozagane Jipe": "SM018",
-  "Tumusiime Brighton": "SM019"
+  "Tumusiime Brighton": "SM019",
+  "Kabagenyi Faridah": "SM020",
+  "Katusiime Racheal": "SM021",
+  "Ritah Kobusingye": "SM022"
 };
 
 /* Hoima parish dropdown (alphabetical) */
@@ -522,71 +537,74 @@ districtSelect.addEventListener("change", ()=>{
 updateParishField();
 
 productSelect.addEventListener("change", ()=>{
-  if(productSelect.value==="Skewer"){
-    price.value=1000;
-    weight.value=0.045;
-  } else if(productSelect.value==="Kikalayi"){
-    price.value=500;
-    weight.value=0.040;
+  if(productSelect.value === "Skewer"){
+    price.value = 1000;
+    weight.value = 0.045;
+  } else if(productSelect.value === "Kikalayi"){
+    price.value = 500;
+    weight.value = 0.040;
   } else {
-    price.value="";
-    weight.value="";
+    price.value = "";
+    weight.value = "";
   }
   calculate();
 });
 
 function formatUGX(n){
-  return Number(n||0).toLocaleString();
+  return Number(n || 0).toLocaleString();
 }
 
 function calculate(){
-  const w = parseFloat(weight.value)||0;
+  const w = parseFloat(weight.value) || 0;
 
-  let issuedP = parseFloat(issuedPortions.value)||0;
-  let issuedK = parseFloat(issuedKg.value)||0;
-  let closingP = parseFloat(closingPortions.value)||0;
-  let closingK = parseFloat(closingKg.value)||0;
+  let issuedP = parseFloat(issuedPortions.value) || 0;
+  let issuedK = parseFloat(issuedKg.value) || 0;
+  let closingP = parseFloat(closingPortions.value) || 0;
+  let closingK = parseFloat(closingKg.value) || 0;
 
-  if(document.activeElement===issuedPortions){
-    issuedKg.value = (issuedP*w).toFixed(1);
+  if(document.activeElement === issuedPortions && w > 0){
+    issuedKg.value = (issuedP * w).toFixed(1);
   }
-  if(document.activeElement===issuedKg){
-    issuedPortions.value = Math.round(issuedK/w||0);
+  if(document.activeElement === issuedKg && w > 0){
+    issuedPortions.value = Math.round(issuedK / w || 0);
   }
-  if(document.activeElement===closingPortions){
-    closingKg.value = (closingP*w).toFixed(1);
+  if(document.activeElement === closingPortions && w > 0){
+    closingKg.value = (closingP * w).toFixed(1);
   }
-  if(document.activeElement===closingKg){
-    closingPortions.value = Math.round(closingK/w||0);
+  if(document.activeElement === closingKg && w > 0){
+    closingPortions.value = Math.round(closingK / w || 0);
   }
 
-  issuedP = parseFloat(issuedPortions.value)||0;
-  closingP = parseFloat(closingPortions.value)||0;
-  issuedK = parseFloat(issuedKg.value)||0;
-  closingK = parseFloat(closingKg.value)||0;
+  issuedP = parseFloat(issuedPortions.value) || 0;
+  closingP = parseFloat(closingPortions.value) || 0;
+  issuedK = parseFloat(issuedKg.value) || 0;
+  closingK = parseFloat(closingKg.value) || 0;
 
   const soldP = issuedP - closingP;
-  const soldK = issuedK - closingK;
+  const soldKValue = issuedK - closingK;
 
-  soldKg.value = (soldK || 0).toFixed(1);
+  soldKg.value = (soldKValue || 0).toFixed(1);
 
   if(soldP < 0){
-    errorMsg.innerText="Error: Closing balance cannot exceed issued stock.";
-    warnMsg.innerText="";
+    errorMsg.innerText = "Error: Closing balance cannot exceed issued stock.";
+    warnMsg.innerText = "";
+    cashExpected.value = "";
+    discrepancy.value = "";
+    commission.value = "";
     return;
   } else {
-    // don't clear errorMsg here because recordData may set other errors
+    errorMsg.innerText = "";
   }
 
-  const expected = soldP * (parseFloat(price.value)||0);
-  const collected = parseFloat(cashCollected.value)||0;
+  const expected = soldP * (parseFloat(price.value) || 0);
+  const collected = parseFloat(cashCollected.value) || 0;
   const discrepancyVal = expected - collected;
 
-  const rate = (parseFloat(commissionRate.value)||0)/100;
+  const rate = (parseFloat(commissionRate.value) || 0) / 100;
   const commissionVal = (collected * rate) - discrepancyVal;
 
   warnMsg.innerText = "";
-  if (soldK < 2 && soldK > 0) {
+  if (soldKValue < 2 && soldKValue > 0) {
     warnMsg.innerText = "Warning: less than 2kg sold.";
   }
 
@@ -595,8 +613,8 @@ function calculate(){
   commission.value = formatUGX(commissionVal);
 }
 
-document.querySelectorAll("input").forEach(i=>i.addEventListener("input",calculate));
-document.querySelectorAll("select").forEach(s=>s.addEventListener("change",calculate));
+document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
+document.querySelectorAll("select").forEach(s => s.addEventListener("change", calculate));
 
 function storageKeyForCurrentDate(){
   const d = (date.value || today).replaceAll("-", "");
@@ -613,7 +631,7 @@ function bindDeleteButtons(){
   document.querySelectorAll("#recordsTable tbody tr").forEach(tr=>{
     const btn = tr.querySelector("button");
     if(btn){
-      btn.onclick=()=>{
+      btn.onclick = ()=>{
         tr.remove();
         saveLocal();
       };
@@ -626,17 +644,16 @@ function loadLocal(){
   const key = last || storageKeyForCurrentDate();
   const data = localStorage.getItem(key);
   if(data){
-    document.querySelector("#recordsTable tbody").innerHTML=data;
+    document.querySelector("#recordsTable tbody").innerHTML = data;
     bindDeleteButtons();
   }
 }
 loadLocal();
 
 function recordData(){
-  // clear record-specific errors first
   errorMsg.innerText = "";
 
-  if(!date.value || !district.value || !channel.value || !product.value || !sa.value){
+  if(!date.value || !district.value || !channel.value || !productSelect.value || !sa.value){
     alert("Please fill required fields.");
     return;
   }
@@ -644,9 +661,17 @@ function recordData(){
   const saName = sa.value;
   const saId = saIdByName[saName];
 
-  // ✅ Error if no SA ID
   if(!saId){
     errorMsg.innerText = "Error: SA ID not found for selected SA. Please check the SA list/mapping.";
+    warnMsg.innerText = "";
+    return;
+  }
+
+  const issuedP = parseFloat(issuedPortions.value) || 0;
+  const closingP = parseFloat(closingPortions.value) || 0;
+
+  if(closingP > issuedP){
+    errorMsg.innerText = "Error: Closing balance cannot exceed issued stock.";
     warnMsg.innerText = "";
     return;
   }
@@ -657,14 +682,10 @@ function recordData(){
   row.insertCell().innerText = date.value;
   row.insertCell().innerText = district.value;
   row.insertCell().innerText = channel.value;
-  row.insertCell().innerText = product.value;
-
-  // SA ID before SA name
+  row.insertCell().innerText = productSelect.value;
   row.insertCell().innerText = saId;
   row.insertCell().innerText = saName;
-
   row.insertCell().innerText = getParishValue();
-
   row.insertCell().innerText = price.value;
   row.insertCell().innerText = weight.value;
   row.insertCell().innerText = issuedPortions.value;
@@ -672,7 +693,6 @@ function recordData(){
   row.insertCell().innerText = closingPortions.value;
   row.insertCell().innerText = closingKg.value;
   row.insertCell().innerText = soldKg.value;
-
   row.insertCell().innerText = cashCollected.value;
   row.insertCell().innerText = cashExpected.value;
   row.insertCell().innerText = discrepancy.value;
@@ -680,8 +700,8 @@ function recordData(){
   row.insertCell().innerText = commission.value;
 
   const del = document.createElement("button");
-  del.innerText="Delete";
-  del.onclick=()=>{
+  del.innerText = "Delete";
+  del.onclick = ()=>{
     row.remove();
     saveLocal();
   };
@@ -691,11 +711,11 @@ function recordData(){
 }
 
 function resetForm(){
-  document.querySelectorAll("input").forEach(i=>i.value="");
+  document.querySelectorAll("input").forEach(i => i.value = "");
 
   district.value = "";
   channel.value = "";
-  product.value = "";
+  productSelect.value = "";
   sa.value = "";
 
   parishInput.value = "";
@@ -712,7 +732,7 @@ function resetForm(){
 }
 
 function resetTable(){
-  document.querySelector("#recordsTable tbody").innerHTML="";
+  document.querySelector("#recordsTable tbody").innerHTML = "";
   const last = localStorage.getItem("SA_Sales_LAST");
   if(last) localStorage.removeItem(last);
 }
@@ -731,7 +751,9 @@ function exportTable(){
     const filename = `SA_Sales - ${d}.xlsx`;
 
     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([wbout], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    });
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
