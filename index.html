@@ -302,6 +302,30 @@
         <option>Producer activation</option>
       </select>
 
+      <label id="marketNameLabel" style="display:none">Market Name</label>
+      <select id="marketName" style="display:none">
+        <option value="">Select</option>
+        <option>Buseruka</option>
+        <option>Butimba</option>
+        <option>Kyakapeya</option>
+        <option>Kisalizi</option>
+        <option>Wegesa</option>
+        <option>Bugambe</option>
+        <option>Kigorobya</option>
+        <option>Katikala</option>
+        <option>Parkcell</option>
+        <option>Ruguse</option>
+        <option>Kabale</option>
+        <option>Dwoli</option>
+        <option>Kinogozi</option>
+        <option>Buhimba</option>
+        <option>Kijangi</option>
+        <option>Parkcell / CBD</option>
+        <option>Karongo</option>
+        <option>Butema</option>
+        <option>Rwentale</option>
+      </select>
+
       <label>Product</label>
       <select id="product">
         <option value="">Select</option>
@@ -389,6 +413,7 @@
               <th>Date</th>
               <th>District</th>
               <th>Channel</th>
+              <th>Market Name</th>
               <th>Product</th>
               <th>SA ID</th>
               <th>SA</th>
@@ -499,6 +524,8 @@
     const date = document.getElementById("date");
     const district = document.getElementById("district");
     const channel = document.getElementById("channel");
+    const marketName = document.getElementById("marketName");
+    const marketNameLabel = document.getElementById("marketNameLabel");
     const productSelect = document.getElementById("product");
 
     const price = document.getElementById("price");
@@ -566,6 +593,17 @@
       }
     }
 
+    function updateMarketNameField() {
+      if (channel.value === "Market sales") {
+        marketName.style.display = "block";
+        marketNameLabel.style.display = "block";
+      } else {
+        marketName.value = "";
+        marketName.style.display = "none";
+        marketNameLabel.style.display = "none";
+      }
+    }
+
     function getParishValue() {
       return districtSelect.value === "Hoima"
         ? (parishSelect.value || "")
@@ -577,7 +615,13 @@
       calculate();
     });
 
+    channel.addEventListener("change", () => {
+      updateMarketNameField();
+      calculate();
+    });
+
     updateParishField();
+    updateMarketNameField();
 
     productSelect.addEventListener("change", () => {
       if (productSelect.value === "Skewer") {
@@ -701,6 +745,11 @@
         return;
       }
 
+      if (channel.value === "Market sales" && !marketName.value) {
+        alert("Please select Market Name.");
+        return;
+      }
+
       const saName = saSelect.value;
       const saId = saIdByName[saName];
 
@@ -725,6 +774,7 @@
       row.insertCell().innerText = date.value;
       row.insertCell().innerText = district.value;
       row.insertCell().innerText = channel.value;
+      row.insertCell().innerText = marketName.value;
       row.insertCell().innerText = productSelect.value;
       row.insertCell().innerText = saId;
       row.insertCell().innerText = saName;
@@ -758,12 +808,14 @@
 
       district.value = "";
       channel.value = "";
+      marketName.value = "";
       productSelect.value = "";
       saSelect.value = "";
 
       parishInput.value = "";
       parishSelect.value = "";
       updateParishField();
+      updateMarketNameField();
 
       commissionRate.value = 20;
       date.value = today;
