@@ -1,181 +1,816 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Sales Tracker</title>
-<style>
-  body { font-family: Arial; margin: 20px; }
-  label { display: block; margin-top: 10px; }
-  input, select { width: 200px; padding: 5px; }
-  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
-  th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
-  button { margin-top: 10px; }
-</style>
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selling Agent Daily Sales Tool</title>
 
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0B8F45" />
+
+  <style>
+    :root{
+      --brand-green:#0B8F45;
+      --brand-green-2:#0A7F3E;
+      --mint-bg:#DFF2D8;
+      --mint-bg-2:#CFEBC5;
+      --card:#ffffff;
+      --card-tint:#F6FAF5;
+      --text:#0b1220;
+      --muted:#64748b;
+      --border:#D7E3D4;
+      --shadow:0 8px 18px rgba(11, 18, 32, 0.08);
+      --shadow-soft:0 6px 14px rgba(11, 18, 32, 0.06);
+      --accent:#F2A11F;
+      --danger:#DC2626;
+      --warning:#B45309;
+      --radius-card:18px;
+      --radius-input:12px;
+      --radius-btn:999px;
+      --header-height:64px;
+    }
+
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:
+        radial-gradient(900px 380px at 20% 0%, rgba(255,255,255,0.7), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, var(--mint-bg) 0%, var(--mint-bg-2) 100%);
+      color:var(--text);
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:10;
+      height:var(--header-height);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 14px;
+      background:var(--brand-green);
+      box-shadow:0 10px 24px rgba(0,0,0,0.18);
+    }
+
+    .topbar .title{
+      color:#fff;
+      font-weight:800;
+      letter-spacing:.3px;
+      text-align:center;
+      line-height:1.1;
+      font-size:18px;
+    }
+
+    .container{
+      max-width:780px;
+      margin:auto;
+      padding:14px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius-card);
+      padding:16px;
+      margin-bottom:14px;
+      box-shadow:var(--shadow-soft);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      height:4px;
+      width:100%;
+      background:linear-gradient(90deg, var(--accent) 0%, rgba(242,161,31,0) 65%);
+      opacity:.95;
+    }
+
+    h2{
+      margin:0 0 10px 0;
+      color:var(--brand-green);
+      font-size:18px;
+      font-weight:800;
+    }
+
+    p{
+      margin:8px 0 0 0;
+      color:var(--muted);
+      line-height:1.35;
+      font-size:13.5px;
+    }
+
+    label{
+      font-size:13px;
+      font-weight:800;
+      color:#0f172a;
+      display:block;
+      margin-top:10px;
+      margin-bottom:6px;
+    }
+
+    input, select{
+      width:100%;
+      padding:11px 12px;
+      border-radius:var(--radius-input);
+      border:1px solid var(--border);
+      font-size:14px;
+      background:linear-gradient(180deg, #ffffff 0%, var(--card-tint) 100%);
+      box-shadow:0 2px 8px rgba(11, 18, 32, 0.04);
+      outline:none;
+      transition:box-shadow .15s ease, border-color .15s ease;
+      box-sizing:border-box;
+    }
+
+    input:focus, select:focus{
+      border-color:rgba(11,143,69,0.55);
+      box-shadow:0 0 0 4px rgba(11,143,69,0.14), 0 6px 14px rgba(11, 18, 32, 0.06);
+    }
+
+    input[readonly]{
+      background:linear-gradient(180deg, #F1F7F2 0%, #EAF4EA 100%);
+      color:#1f2937;
+      border-color:#CFE3D2;
+    }
+
+    button{
+      padding:10px 14px;
+      border-radius:var(--radius-btn);
+      border:none;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .06s ease, box-shadow .15s ease, filter .15s ease;
+      box-shadow:0 8px 16px rgba(11, 18, 32, 0.12);
+    }
+
+    button:active{
+      transform:translateY(1px);
+      filter:brightness(.98);
+    }
+
+    .btn-primary{
+      background:linear-gradient(180deg, var(--brand-green) 0%, var(--brand-green-2) 100%);
+      color:white;
+    }
+
+    .btn-orange{
+      background:linear-gradient(180deg, var(--accent) 0%, #E89416 100%);
+      color:#1f2937;
+    }
+
+    .btn-secondary{
+      background:linear-gradient(180deg, #FFFFFF 0%, #F4F7F7 100%);
+      color:#0f172a;
+      border:1px solid var(--border);
+      box-shadow:0 8px 16px rgba(11, 18, 32, 0.08);
+    }
+
+    .flex{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .table-container{
+      overflow-x:auto;
+      margin-top:10px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow:0 10px 18px rgba(11, 18, 32, 0.06);
+    }
+
+    table{
+      border-collapse:separate;
+      border-spacing:0;
+      width:100%;
+      font-size:13px;
+      min-width:950px;
+    }
+
+    th{
+      position:sticky;
+      top:0;
+      background:linear-gradient(180deg, #EAF6EA 0%, #DFF1DE 100%);
+      color:var(--brand-green);
+      font-weight:900;
+      border-bottom:1px solid var(--border);
+    }
+
+    th, td{
+      padding:10px 10px;
+      border-right:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      text-align:left;
+      white-space:nowrap;
+    }
+
+    thead tr th:last-child,
+    tbody tr td:last-child{
+      border-right:none;
+    }
+
+    tbody tr:nth-child(even) td{
+      background:#FBFDFB;
+    }
+
+    tbody tr:hover td{
+      background:#F0FAF1;
+    }
+
+    #recordsTable button{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(220,38,38,0.35);
+      background:linear-gradient(180deg, #fff 0%, #fff5f5 100%);
+      color:var(--danger);
+      box-shadow:none;
+      font-weight:900;
+    }
+
+    .error{
+      color:var(--danger);
+      font-size:13px;
+      font-weight:800;
+      margin-top:8px;
+    }
+
+    .warning{
+      color:var(--warning);
+      font-size:13px;
+      font-weight:800;
+      margin-top:6px;
+    }
+
+    .hero{
+      background:
+        radial-gradient(560px 220px at 15% 10%, rgba(242,161,31,0.18), rgba(242,161,31,0) 60%),
+        linear-gradient(180deg, #ffffff 0%, #F5FBF6 100%);
+      box-shadow:var(--shadow);
+    }
+
+    .hero::before{
+      height:6px;
+    }
+
+    @media (max-width:420px){
+      .topbar .title{ font-size:16px; }
+      h2{ font-size:16px; }
+      .container{ padding:12px; }
+      button{ width:100%; }
+    }
+  </style>
+</head>
 <body>
 
-<h2>General Information</h2>
+  <div class="topbar">
+    <div class="title">Selling Agent Daily Sales Tool</div>
+  </div>
 
-<label>Date</label>
-<input type="date" id="date">
+  <div class="container">
 
-<label>District</label>
-<input type="text" id="district">
+    <div class="card hero">
+      <h2>Overview</h2>
+      <p>
+        This tool helps you record daily sales and related variables for Selling Agents (SAs).
+        Please submit the completed table each day to the S&amp;M Manager via WhatsApp or email.
+      </p>
+    </div>
 
-<label>Sales Channel</label>
-<select id="channel">
-  <option value="">Select</option>
-  <option>Market sales</option>
-  <option>Door to door</option>
-  <option>Retail</option>
-</select>
+    <div class="card">
+      <h2>General Information</h2>
 
-<!-- Market name -->
-<label id="marketLabel" style="display:none">Market Name</label>
-<select id="marketName" style="display:none">
-  <option value="">Select</option>
-  <option>Buseruka</option>
-  <option>Butimba</option>
-  <option>Kyakapeya</option>
-  <option>Kisalizi</option>
-  <option>Wegesa / Bugambe</option>
-  <option>Kigorobya</option>
-  <option>Katikala</option>
-  <option>Parkcell</option>
-  <option>Ruguse</option>
-  <option>Kabale</option>
-  <option>Dwoli</option>
-  <option>Kinogozi</option>
-  <option>Buhimba</option>
-  <option>Kijangi</option>
-  <option>Parkcell / CBD</option>
-  <option>Karongo</option>
-  <option>Butema</option>
-  <option>Rwentale</option>
-</select>
+      <label>Date</label>
+      <input type="date" id="date" />
 
-<label>Product</label>
-<input type="text" id="product">
+      <label>District</label>
+      <select id="district">
+        <option value="">Select</option>
+        <option>Buliisa</option>
+        <option>Hoima</option>
+      </select>
 
-<label>SA</label>
-<input type="text" id="sa">
+      <label>Sales Channel</label>
+      <select id="channel">
+        <option value="">Select</option>
+        <option>Hawking</option>
+        <option>Market sales</option>
+        <option>Producer activation</option>
+      </select>
 
-<label>Unit Price</label>
-<input type="number" id="price">
+      <label>Product</label>
+      <select id="product">
+        <option value="">Select</option>
+        <option>Kikalayi</option>
+        <option>Skewer</option>
+      </select>
 
-<label>Weight (kg)</label>
-<input type="number" id="weight">
+      <label>SA Name</label>
+      <select id="sa">
+        <option value="">Select</option>
+      </select>
 
-<label>Stock Issued (Portions)</label>
-<input type="number" id="issuedPortions">
+      <label>Parish</label>
+      <select id="parishSelect" style="display:none"></select>
 
-<label>Closing Balance (Portions)</label>
-<input type="number" id="closingPortions">
+      <input type="text" id="parishInput" placeholder="Enter parish" list="buliisaParishesList" />
+      <datalist id="buliisaParishesList">
+        <option value="Western ward Buliisa"></option>
+      </datalist>
+    </div>
 
-<button onclick="recordData()">Record</button>
+    <div class="card">
+      <h2>Product</h2>
 
-<h2>Records</h2>
+      <label>Unit Price (UGX)</label>
+      <input type="number" id="price" readonly />
 
-<table id="recordsTable">
-<thead>
-<tr>
-<th>Date</th>
-<th>District</th>
-<th>Channel</th>
-<th>Market Name</th>
-<th>Product</th>
-<th>SA</th>
-<th>Unit Price</th>
-<th>Weight</th>
-<th>Issued</th>
-<th>Closing</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+      <label>Portion Weight (kg)</label>
+      <input type="number" id="weight" readonly />
 
-<script>
-const channel = document.getElementById("channel");
-const marketLabel = document.getElementById("marketLabel");
-const marketName = document.getElementById("marketName");
+      <label>Stock Issued (Portions)</label>
+      <input type="number" id="issuedPortions" />
 
-function updateMarketField() {
-  if (channel.value === "Market sales") {
-    marketLabel.style.display = "block";
-    marketName.style.display = "block";
-  } else {
-    marketLabel.style.display = "none";
-    marketName.style.display = "none";
-    marketName.value = "";
-  }
-}
+      <label>Stock Issued (kg)</label>
+      <input type="number" id="issuedKg" />
 
-channel.addEventListener("change", updateMarketField);
+      <label>Closing Balance (Portions)</label>
+      <input type="number" id="closingPortions" />
 
-function recordData() {
-  const date = document.getElementById("date").value;
-  const district = document.getElementById("district").value;
-  const product = document.getElementById("product").value;
-  const sa = document.getElementById("sa").value;
-  const price = document.getElementById("price").value;
-  const weight = document.getElementById("weight").value;
-  const issued = document.getElementById("issuedPortions").value;
-  const closing = document.getElementById("closingPortions").value;
+      <label>Closing Balance (kg)</label>
+      <input type="number" id="closingKg" />
 
-  if (!date || !district || !channel.value || !product || !sa) {
-    alert("Please fill required fields.");
-    return;
-  }
+      <label>Stock Sold (kg)</label>
+      <input type="number" id="soldKg" readonly />
+    </div>
 
-  if (channel.value === "Market sales" && !marketName.value) {
-    alert("Please select Market Name.");
-    return;
-  }
+    <div class="card">
+      <h2>Financial Data</h2>
 
-  if (parseFloat(closing) > parseFloat(issued)) {
-    alert("Closing cannot exceed issued.");
-    return;
-  }
+      <label>Cash Collected (UGX)</label>
+      <input type="number" id="cashCollected" />
 
-  const table = document.querySelector("#recordsTable tbody");
-  const row = table.insertRow();
+      <label>Cash Expected (UGX)</label>
+      <input type="text" id="cashExpected" readonly />
 
-  row.insertCell().innerText = date;
-  row.insertCell().innerText = district;
-  row.insertCell().innerText = channel.value;
-  row.insertCell().innerText = channel.value === "Market sales" ? marketName.value : "";
-  row.insertCell().innerText = product;
-  row.insertCell().innerText = sa;
-  row.insertCell().innerText = price;
-  row.insertCell().innerText = weight;
-  row.insertCell().innerText = issued;
-  row.insertCell().innerText = closing;
+      <label>Discrepancy (UGX)</label>
+      <input type="text" id="discrepancy" readonly />
 
-  const del = document.createElement("button");
-  del.innerText = "Delete";
-  del.onclick = () => row.remove();
-  row.insertCell().appendChild(del);
+      <label>Commission Rate (%)</label>
+      <input type="number" id="commissionRate" value="20" />
 
-  resetForm();
-}
+      <label>Day's Commission (UGX)</label>
+      <input type="text" id="commission" readonly />
 
-function resetForm() {
-  document.getElementById("date").value = "";
-  document.getElementById("district").value = "";
-  document.getElementById("product").value = "";
-  document.getElementById("sa").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("weight").value = "";
-  document.getElementById("issuedPortions").value = "";
-  document.getElementById("closingPortions").value = "";
-  marketName.value = "";
-  updateMarketField();
-}
+      <p class="error" id="errorMsg"></p>
+      <p class="warning" id="warnMsg"></p>
 
-updateMarketField();
-</script>
+      <div class="flex">
+        <button class="btn-primary" onclick="recordData()">Record Data</button>
+        <button class="btn-secondary" onclick="resetForm()">Reset Form</button>
+      </div>
+    </div>
 
+    <div class="card">
+      <h2>Records</h2>
+      <div class="flex">
+        <button class="btn-orange" onclick="exportTable()">Export XLSX</button>
+        <button class="btn-secondary" onclick="resetTable()">Reset Table</button>
+      </div>
+
+      <div class="table-container">
+        <table id="recordsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>District</th>
+              <th>Channel</th>
+              <th>Product</th>
+              <th>SA ID</th>
+              <th>SA</th>
+              <th>Parish</th>
+              <th>Unit Price (UGX)</th>
+              <th>Portion Weight (kg)</th>
+              <th>Stock Issued (Portions)</th>
+              <th>Stock Issued (kg)</th>
+              <th>Closing Balance (Portions)</th>
+              <th>Closing Balance (kg)</th>
+              <th>Stock Sold (kg)</th>
+              <th>Cash Collected (UGX)</th>
+              <th>Cash Expected (UGX)</th>
+              <th>Discrepancy (UGX)</th>
+              <th>Commission Rate (%)</th>
+              <th>Day's Commission (UGX)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+    document.getElementById("date").value = today;
+
+    const agents = [
+      { id: "SM001", name: "Amanyire Fred" },
+      { id: "SM002", name: "Atugonza Lydia" },
+      { id: "SM003", name: "Ayesiga Sunny" },
+      { id: "SM004", name: "Baguma AbdulKarim" },
+      { id: "SM005", name: "Baruza Stephen" },
+      { id: "SM006", name: "Katusiime Janepher" },
+      { id: "SM007", name: "Kemigisha Rosette" },
+      { id: "SM008", name: "Kiiza Majory" },
+      { id: "SM009", name: "Mugisa Allan" },
+      { id: "SM010", name: "Mugisa Humphrey" },
+      { id: "SM011", name: "Muwanguzi Lawrence" },
+      { id: "SM012", name: "Nakaga Rovince" },
+      { id: "SM013", name: "Natukunda Mellan" },
+      { id: "SM014", name: "Ngonzi Patience Comfort" },
+      { id: "SM015", name: "Nkyanungi Joyce" },
+      { id: "SM016", name: "Nuwamanya Robert" },
+      { id: "SM017", name: "Ofoyrwoth Gideon" },
+      { id: "SM018", name: "Tugozagane Jipe" },
+      { id: "SM019", name: "Tumusiime Brighton" },
+      { id: "SM020", name: "Kabagenyi Faridah" },
+      { id: "SM021", name: "Katusiime Racheal" },
+      { id: "SM022", name: "Kobusingye Ritah" },
+      { id: "SM023", name: "Mugume Tadeo" },
+      { id: "SM024", name: "Kasaija Jovan" },
+      { id: "SM025", name: "Ahaisibwe Gloria" },
+      { id: "SM026", name: "Kengonzi Blessing" },
+      { id: "SM027", name: "Ategeka Steven" },
+      { id: "SM028", name: "Agaba Jovia" },
+      { id: "SM029", name: "Musinguzi Joseph" },
+      { id: "SM030", name: "Alinaitwe Phiona" },
+      { id: "SM031", name: "Namatovu Esther" },
+      { id: "SM032", name: "Ben Trevor" },
+      { id: "SM033", name: "Asobora Evans" },
+      { id: "SM034", name: "Muhirwa David" },
+      { id: "SM035", name: "Nyangoma Mary" },
+      { id: "SM036", name: "Ahebwa Fatiha" },
+      { id: "SM037", name: "Gibiiz Doreen" },
+      { id: "SM038", name: "Asiimwe Florence" },
+      { id: "SM039", name: "Kunihira Bridget" },
+      { id: "SM040", name: "Katusiime Scovia" },
+      { id: "SM041", name: "Ssenyonjo Kelvin" },
+      { id: "SM042", name: "Nabitotsi Bridget" },
+      { id: "SM043", name: "Kanyonyozi Jalia" },
+      { id: "SM044", name: "Roba Johnson" },
+      { id: "SM045", name: "Murungi Kevin" },
+      { id: "SM046", name: "Jamila Atura" }
+    ];
+
+    const saIdByName = Object.fromEntries(agents.map(agent => [agent.name, agent.id]));
+
+    const saSelect = document.getElementById("sa");
+    function populateAgentDropdown() {
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Select";
+      saSelect.innerHTML = "";
+      saSelect.appendChild(defaultOption);
+
+      agents
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(agent => {
+          const option = document.createElement("option");
+          option.value = agent.name;
+          option.textContent = `${agent.name} (${agent.id})`;
+          saSelect.appendChild(option);
+        });
+    }
+    populateAgentDropdown();
+
+    const date = document.getElementById("date");
+    const district = document.getElementById("district");
+    const channel = document.getElementById("channel");
+    const productSelect = document.getElementById("product");
+
+    const price = document.getElementById("price");
+    const weight = document.getElementById("weight");
+
+    const districtSelect = document.getElementById("district");
+    const parishSelect = document.getElementById("parishSelect");
+    const parishInput = document.getElementById("parishInput");
+
+    const issuedPortions = document.getElementById("issuedPortions");
+    const issuedKg = document.getElementById("issuedKg");
+    const closingPortions = document.getElementById("closingPortions");
+    const closingKg = document.getElementById("closingKg");
+    const soldKg = document.getElementById("soldKg");
+
+    const cashCollected = document.getElementById("cashCollected");
+    const cashExpected = document.getElementById("cashExpected");
+    const discrepancy = document.getElementById("discrepancy");
+    const commissionRate = document.getElementById("commissionRate");
+    const commission = document.getElementById("commission");
+
+    const warnMsg = document.getElementById("warnMsg");
+    const errorMsg = document.getElementById("errorMsg");
+
+    const hoimaParishes = [
+      "Bwikya ward",
+      "Bujuura ward",
+      "Central ward Hoima",
+      "Karongo ward",
+      "Kasingo ward",
+      "Kibingo ward",
+      "Kibugubya",
+      "Kicwamba ward",
+      "Kiduuma ward",
+      "Kigorobya",
+      "Kihombooza ward",
+      "Kihuukya ward",
+      "Kisalizi",
+      "Kyesiiga ward",
+      "Kyentale ward",
+      "Northern ward Hoima",
+      "Nyakambugu ward",
+      "Southern ward Hoima",
+      "Western ward Hoima"
+    ].sort((a, b) => a.localeCompare(b));
+
+    function setupHoimaParishOptions() {
+      parishSelect.innerHTML = '<option value="">Select</option>';
+      hoimaParishes.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        parishSelect.appendChild(opt);
+      });
+    }
+    setupHoimaParishOptions();
+
+    function updateParishField() {
+      if (districtSelect.value === "Hoima") {
+        parishInput.style.display = "none";
+        parishSelect.style.display = "block";
+      } else {
+        parishSelect.style.display = "none";
+        parishInput.style.display = "block";
+      }
+    }
+
+    function getParishValue() {
+      return districtSelect.value === "Hoima"
+        ? (parishSelect.value || "")
+        : (parishInput.value || "");
+    }
+
+    districtSelect.addEventListener("change", () => {
+      updateParishField();
+      calculate();
+    });
+
+    updateParishField();
+
+    productSelect.addEventListener("change", () => {
+      if (productSelect.value === "Skewer") {
+        price.value = 1000;
+        weight.value = 0.045;
+      } else if (productSelect.value === "Kikalayi") {
+        price.value = 500;
+        weight.value = 0.040;
+      } else {
+        price.value = "";
+        weight.value = "";
+      }
+      calculate();
+    });
+
+    function formatUGX(n) {
+      return Number(n || 0).toLocaleString();
+    }
+
+    function calculate() {
+      const w = parseFloat(weight.value) || 0;
+
+      let issuedP = parseFloat(issuedPortions.value) || 0;
+      let issuedK = parseFloat(issuedKg.value) || 0;
+      let closingP = parseFloat(closingPortions.value) || 0;
+      let closingK = parseFloat(closingKg.value) || 0;
+
+      if (document.activeElement === issuedPortions && w > 0) {
+        issuedKg.value = (issuedP * w).toFixed(1);
+      }
+      if (document.activeElement === issuedKg && w > 0) {
+        issuedPortions.value = Math.round(issuedK / w || 0);
+      }
+      if (document.activeElement === closingPortions && w > 0) {
+        closingKg.value = (closingP * w).toFixed(1);
+      }
+      if (document.activeElement === closingKg && w > 0) {
+        closingPortions.value = Math.round(closingK / w || 0);
+      }
+
+      issuedP = parseFloat(issuedPortions.value) || 0;
+      closingP = parseFloat(closingPortions.value) || 0;
+      issuedK = parseFloat(issuedKg.value) || 0;
+      closingK = parseFloat(closingKg.value) || 0;
+
+      const soldP = issuedP - closingP;
+      const soldKValue = issuedK - closingK;
+
+      soldKg.value = (soldKValue || 0).toFixed(1);
+
+      if (soldP < 0) {
+        errorMsg.innerText = "Error: Closing balance cannot exceed issued stock.";
+        warnMsg.innerText = "";
+        cashExpected.value = "";
+        discrepancy.value = "";
+        commission.value = "";
+        return;
+      } else {
+        errorMsg.innerText = "";
+      }
+
+      const expected = soldP * (parseFloat(price.value) || 0);
+      const collected = parseFloat(cashCollected.value) || 0;
+      const discrepancyVal = expected - collected;
+
+      const rate = (parseFloat(commissionRate.value) || 0) / 100;
+      const commissionVal = (collected * rate) - discrepancyVal;
+
+      warnMsg.innerText = "";
+      if (soldKValue < 2 && soldKValue > 0) {
+        warnMsg.innerText = "Warning: less than 2kg sold.";
+      }
+
+      cashExpected.value = formatUGX(expected);
+      discrepancy.value = formatUGX(discrepancyVal);
+      commission.value = formatUGX(commissionVal);
+    }
+
+    document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
+    document.querySelectorAll("select").forEach(s => s.addEventListener("change", calculate));
+
+    function storageKeyForCurrentDate() {
+      const d = (date.value || today).replaceAll("-", "");
+      return `SA_Sales - ${d}`;
+    }
+
+    function saveLocal() {
+      const key = storageKeyForCurrentDate();
+      localStorage.setItem(key, document.querySelector("#recordsTable tbody").innerHTML);
+      localStorage.setItem("SA_Sales_LAST", key);
+    }
+
+    function bindDeleteButtons() {
+      document.querySelectorAll("#recordsTable tbody tr").forEach(tr => {
+        const btn = tr.querySelector("button");
+        if (btn) {
+          btn.onclick = () => {
+            tr.remove();
+            saveLocal();
+          };
+        }
+      });
+    }
+
+    function loadLocal() {
+      const last = localStorage.getItem("SA_Sales_LAST");
+      const key = last || storageKeyForCurrentDate();
+      const data = localStorage.getItem(key);
+      if (data) {
+        document.querySelector("#recordsTable tbody").innerHTML = data;
+        bindDeleteButtons();
+      }
+    }
+    loadLocal();
+
+    function recordData() {
+      errorMsg.innerText = "";
+
+      if (!date.value || !district.value || !channel.value || !productSelect.value || !saSelect.value) {
+        alert("Please fill required fields.");
+        return;
+      }
+
+      const saName = saSelect.value;
+      const saId = saIdByName[saName];
+
+      if (!saId) {
+        errorMsg.innerText = "Error: SA ID not found for selected SA. Please check the SA list.";
+        warnMsg.innerText = "";
+        return;
+      }
+
+      const issuedP = parseFloat(issuedPortions.value) || 0;
+      const closingP = parseFloat(closingPortions.value) || 0;
+
+      if (closingP > issuedP) {
+        errorMsg.innerText = "Error: Closing balance cannot exceed issued stock.";
+        warnMsg.innerText = "";
+        return;
+      }
+
+      const table = document.querySelector("#recordsTable tbody");
+      const row = table.insertRow();
+
+      row.insertCell().innerText = date.value;
+      row.insertCell().innerText = district.value;
+      row.insertCell().innerText = channel.value;
+      row.insertCell().innerText = productSelect.value;
+      row.insertCell().innerText = saId;
+      row.insertCell().innerText = saName;
+      row.insertCell().innerText = getParishValue();
+      row.insertCell().innerText = price.value;
+      row.insertCell().innerText = weight.value;
+      row.insertCell().innerText = issuedPortions.value;
+      row.insertCell().innerText = issuedKg.value;
+      row.insertCell().innerText = closingPortions.value;
+      row.insertCell().innerText = closingKg.value;
+      row.insertCell().innerText = soldKg.value;
+      row.insertCell().innerText = cashCollected.value;
+      row.insertCell().innerText = cashExpected.value;
+      row.insertCell().innerText = discrepancy.value;
+      row.insertCell().innerText = commissionRate.value;
+      row.insertCell().innerText = commission.value;
+
+      const del = document.createElement("button");
+      del.innerText = "Delete";
+      del.onclick = () => {
+        row.remove();
+        saveLocal();
+      };
+      row.insertCell().appendChild(del);
+
+      saveLocal();
+    }
+
+    function resetForm() {
+      document.querySelectorAll("input").forEach(i => i.value = "");
+
+      district.value = "";
+      channel.value = "";
+      productSelect.value = "";
+      saSelect.value = "";
+
+      parishInput.value = "";
+      parishSelect.value = "";
+      updateParishField();
+
+      commissionRate.value = 20;
+      date.value = today;
+
+      warnMsg.innerText = "";
+      errorMsg.innerText = "";
+
+      calculate();
+    }
+
+    function resetTable() {
+      document.querySelector("#recordsTable tbody").innerHTML = "";
+      const last = localStorage.getItem("SA_Sales_LAST");
+      if (last) localStorage.removeItem(last);
+    }
+
+    function exportTable() {
+      try {
+        if (typeof XLSX === "undefined") {
+          alert("XLSX library not loaded. Please connect once to the internet (first load) so it can be cached.");
+          return;
+        }
+
+        const table = document.getElementById("recordsTable");
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Sales" });
+
+        const d = (date.value || today).replaceAll("-", "");
+        const filename = `SA_Sales - ${d}.xlsx`;
+
+        const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const blob = new Blob([wbout], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        console.error(e);
+        alert("Export failed. Check console for details.");
+      }
+    }
+  </script>
 </body>
 </html>
