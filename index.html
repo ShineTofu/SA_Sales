@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Selling Agent Daily Sales Tool</title>
 
-  <!-- PWA (offline) -->
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#0B8F45">
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0B8F45" />
 
   <style>
     :root{
@@ -25,17 +24,15 @@
       --accent:#F2A11F;
       --danger:#DC2626;
       --warning:#B45309;
-
       --radius-card:18px;
       --radius-input:12px;
       --radius-btn:999px;
-
       --header-height:64px;
     }
 
     body{
       margin:0;
-      font-family: Arial, sans-serif;
+      font-family:Arial, sans-serif;
       background:
         radial-gradient(900px 380px at 20% 0%, rgba(255,255,255,0.7), rgba(255,255,255,0) 60%),
         linear-gradient(180deg, var(--mint-bg) 0%, var(--mint-bg-2) 100%);
@@ -268,7 +265,6 @@
     }
   </style>
 </head>
-
 <body>
 
   <div class="topbar">
@@ -289,7 +285,7 @@
       <h2>General Information</h2>
 
       <label>Date</label>
-      <input type="date" id="date">
+      <input type="date" id="date" />
 
       <label>District</label>
       <select id="district">
@@ -313,61 +309,15 @@
         <option>Skewer</option>
       </select>
 
-<label>SA Name</label>
-<select id="sa">
-  <option value="">Select</option>
-  <option>Agaba Jovia</option>
-  <option>Ahaisibwe Gloria</option>
-  <option>Ahebwa Fatiha</option>
-  <option>Alinaitwe Phiona</option>
-  <option>Amanyire Fred</option>
-  <option>Asiimwe Florence</option>
-  <option>Asobora Evans</option>
-  <option>Ategeka Steven</option>
-  <option>Atugonza Lydia</option>
-  <option>Ayesiga Sunny</option>
-  <option>Baguma AbdulKarim</option>
-  <option>Baruza Stephen</option>
-  <option>Ben Trevor</option>
-  <option>Gibiiz Doreen</option>
-  <option>Kabagenyi Faridah</option>
-  <option>Kanyonyozi Jalia</option>
-  <option>Kasaija Jovan</option>
-  <option>Katusiime Janepher</option>
-  <option>Katusiime Racheal</option>
-  <option>Katusiime Scovia</option>
-  <option>Kemigisha Rosette</option>
-  <option>Kengonzi Blessing</option>
-  <option>Kiiza Majory</option>
-  <option>Kobusingye Ritah</option>
-  <option>Kunihira Bridget</option>
-  <option>Mugisa Allan</option>
-  <option>Mugisa Humphrey</option>
-  <option>Mugume Tadeo</option>
-  <option>Muhirwa David</option>
-  <option>Murungi Kevin</option>
-  <option>Musinguzi Joseph</option>
-  <option>Muwanguzi Lawrence</option>
-  <option>Nabitotsi Bridget</option>
-  <option>Nakaga Rovince</option>
-  <option>Namatovu Esther</option>
-  <option>Natukunda Mellan</option>
-  <option>Ngonzi Patience Comfort</option>
-  <option>Nkyanungi Joyce</option>
-  <option>Nuwamanya Robert</option>
-  <option>Nyangoma Mary</option>
-  <option>Ofoyrwoth Gideon</option>
-  <option>Roba Johnson</option>
-  <option>Ssenyonjo Kelvin</option>
-  <option>Tugozagane Jipe</option>
-  <option>Tumusiime Brighton</option>
-</select>
+      <label>SA Name</label>
+      <select id="sa">
+        <option value="">Select</option>
+      </select>
 
       <label>Parish</label>
       <select id="parishSelect" style="display:none"></select>
 
-      <!-- Buliisa free text input -->
-      <input type="text" id="parishInput" placeholder="Enter parish" list="buliisaParishesList">
+      <input type="text" id="parishInput" placeholder="Enter parish" list="buliisaParishesList" />
       <datalist id="buliisaParishesList">
         <option value="Western ward Buliisa"></option>
       </datalist>
@@ -377,44 +327,44 @@
       <h2>Product</h2>
 
       <label>Unit Price (UGX)</label>
-      <input type="number" id="price" readonly>
+      <input type="number" id="price" readonly />
 
       <label>Portion Weight (kg)</label>
-      <input type="number" id="weight" readonly>
+      <input type="number" id="weight" readonly />
 
       <label>Stock Issued (Portions)</label>
-      <input type="number" id="issuedPortions">
+      <input type="number" id="issuedPortions" />
 
       <label>Stock Issued (kg)</label>
-      <input type="number" id="issuedKg">
+      <input type="number" id="issuedKg" />
 
       <label>Closing Balance (Portions)</label>
-      <input type="number" id="closingPortions">
+      <input type="number" id="closingPortions" />
 
       <label>Closing Balance (kg)</label>
-      <input type="number" id="closingKg">
+      <input type="number" id="closingKg" />
 
       <label>Stock Sold (kg)</label>
-      <input type="number" id="soldKg" readonly>
+      <input type="number" id="soldKg" readonly />
     </div>
 
     <div class="card">
       <h2>Financial Data</h2>
 
       <label>Cash Collected (UGX)</label>
-      <input type="number" id="cashCollected">
+      <input type="number" id="cashCollected" />
 
       <label>Cash Expected (UGX)</label>
-      <input type="text" id="cashExpected" readonly>
+      <input type="text" id="cashExpected" readonly />
 
       <label>Discrepancy (UGX)</label>
-      <input type="text" id="discrepancy" readonly>
+      <input type="text" id="discrepancy" readonly />
 
       <label>Commission Rate (%)</label>
-      <input type="number" id="commissionRate" value="20">
+      <input type="number" id="commissionRate" value="20" />
 
       <label>Day's Commission (UGX)</label>
-      <input type="text" id="commission" readonly>
+      <input type="text" id="commission" readonly />
 
       <p class="error" id="errorMsg"></p>
       <p class="warning" id="warnMsg"></p>
@@ -475,11 +425,81 @@
     const today = new Date().toISOString().split("T")[0];
     document.getElementById("date").value = today;
 
+    const agents = [
+      { id: "SM001", name: "Amanyire Fred" },
+      { id: "SM002", name: "Atugonza Lydia" },
+      { id: "SM003", name: "Ayesiga Sunny" },
+      { id: "SM004", name: "Baguma AbdulKarim" },
+      { id: "SM005", name: "Baruza Stephen" },
+      { id: "SM006", name: "Katusiime Janepher" },
+      { id: "SM007", name: "Kemigisha Rosette" },
+      { id: "SM008", name: "Kiiza Majory" },
+      { id: "SM009", name: "Mugisa Allan" },
+      { id: "SM010", name: "Mugisa Humphrey" },
+      { id: "SM011", name: "Muwanguzi Lawrence" },
+      { id: "SM012", name: "Nakaga Rovince" },
+      { id: "SM013", name: "Natukunda Mellan" },
+      { id: "SM014", name: "Ngonzi Patience Comfort" },
+      { id: "SM015", name: "Nkyanungi Joyce" },
+      { id: "SM016", name: "Nuwamanya Robert" },
+      { id: "SM017", name: "Ofoyrwoth Gideon" },
+      { id: "SM018", name: "Tugozagane Jipe" },
+      { id: "SM019", name: "Tumusiime Brighton" },
+      { id: "SM020", name: "Kabagenyi Faridah" },
+      { id: "SM021", name: "Katusiime Racheal" },
+      { id: "SM022", name: "Kobusingye Ritah" },
+      { id: "SM023", name: "Mugume Tadeo" },
+      { id: "SM024", name: "Kasaija Jovan" },
+      { id: "SM025", name: "Ahaisibwe Gloria" },
+      { id: "SM026", name: "Kengonzi Blessing" },
+      { id: "SM027", name: "Ategeka Steven" },
+      { id: "SM028", name: "Agaba Jovia" },
+      { id: "SM029", name: "Musinguzi Joseph" },
+      { id: "SM030", name: "Alinaitwe Phiona" },
+      { id: "SM031", name: "Namatovu Esther" },
+      { id: "SM032", name: "Ben Trevor" },
+      { id: "SM033", name: "Asobora Evans" },
+      { id: "SM034", name: "Muhirwa David" },
+      { id: "SM035", name: "Nyangoma Mary" },
+      { id: "SM036", name: "Ahebwa Fatiha" },
+      { id: "SM037", name: "Gibiiz Doreen" },
+      { id: "SM038", name: "Asiimwe Florence" },
+      { id: "SM039", name: "Kunihira Bridget" },
+      { id: "SM040", name: "Katusiime Scovia" },
+      { id: "SM041", name: "Ssenyonjo Kelvin" },
+      { id: "SM042", name: "Nabitotsi Bridget" },
+      { id: "SM043", name: "Kanyonyozi Jalia" },
+      { id: "SM044", name: "Roba Johnson" },
+      { id: "SM045", name: "Murungi Kevin" },
+      { id: "SM046", name: "Jamila Atura" }
+    ];
+
+    const saIdByName = Object.fromEntries(agents.map(agent => [agent.name, agent.id]));
+
+    const saSelect = document.getElementById("sa");
+    function populateAgentDropdown() {
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Select";
+      saSelect.innerHTML = "";
+      saSelect.appendChild(defaultOption);
+
+      agents
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(agent => {
+          const option = document.createElement("option");
+          option.value = agent.name;
+          option.textContent = `${agent.name} (${agent.id})`;
+          saSelect.appendChild(option);
+        });
+    }
+    populateAgentDropdown();
+
     const date = document.getElementById("date");
     const district = document.getElementById("district");
     const channel = document.getElementById("channel");
     const productSelect = document.getElementById("product");
-    const sa = document.getElementById("sa");
 
     const price = document.getElementById("price");
     const weight = document.getElementById("weight");
@@ -503,55 +523,6 @@
     const warnMsg = document.getElementById("warnMsg");
     const errorMsg = document.getElementById("errorMsg");
 
-    /* SA Name -> SA ID mapping */
-   const saIdByName = {
-  "Amanyire Fred": "SM001",
-  "Atugonza Lydia": "SM002",
-  "Ayesiga Sunny": "SM003",
-  "Baguma AbdulKarim": "SM004",
-  "Baruza Stephen": "SM005",
-  "Katusiime Janepher": "SM006",
-  "Kemigisha Rosette": "SM007",
-  "Kiiza Majory": "SM008",
-  "Mugisa Allan": "SM009",
-  "Mugisa Humphrey": "SM010",
-  "Muwanguzi Lawrence": "SM011",
-  "Nakaga Rovince": "SM012",
-  "Natukunda Mellan": "SM013",
-  "Ngonzi Patience Comfort": "SM014",
-  "Nkyanungi Joyce": "SM015",
-  "Nuwamanya Robert": "SM016",
-  "Ofoyrwoth Gideon": "SM017",
-  "Tugozagane Jipe": "SM018",
-  "Tumusiime Brighton": "SM019",
-  "Kabagenyi Faridah": "SM020",
-  "Katusiime Racheal": "SM021",
-  "Kobusingye Ritah": "SM022",
-  "Mugume Tadeo": "SM023",
-  "Kasaija Jovan": "SM024",
-  "Ahaisibwe Gloria": "SM025",
-  "Kengonzi Blessing": "SM026",
-  "Ategeka Steven": "SM027",
-  "Agaba Jovia": "SM028",
-  "Musinguzi Joseph": "SM029",
-  "Alinaitwe Phiona": "SM030",
-  "Namatovu Esther": "SM031",
-  "Ben Trevor": "SM032",
-  "Asobora Evans": "SM033",
-  "Muhirwa David": "SM034",
-  "Nyangoma Mary": "SM035",
-  "Ahebwa Fatiha": "SM036",
-  "Gibiiz Doreen": "SM037",
-  "Asiimwe Florence": "SM038",
-  "Kunihira Bridget": "SM039",
-  "Katusiime Scovia": "SM040",
-  "Ssenyonjo Kelvin": "SM041",
-  "Nabitotsi Bridget": "SM042",
-  "Kanyonyozi Jalia": "SM043",
-  "Roba Johnson": "SM044",
-  "Murungi Kevin": "SM045"
-};
-    /* Hoima parish dropdown (alphabetical) */
     const hoimaParishes = [
       "Bwikya ward",
       "Bujuura ward",
@@ -596,7 +567,7 @@
     }
 
     function getParishValue() {
-      return (districtSelect.value === "Hoima")
+      return districtSelect.value === "Hoima"
         ? (parishSelect.value || "")
         : (parishInput.value || "");
     }
@@ -725,16 +696,16 @@
     function recordData() {
       errorMsg.innerText = "";
 
-      if (!date.value || !district.value || !channel.value || !productSelect.value || !sa.value) {
+      if (!date.value || !district.value || !channel.value || !productSelect.value || !saSelect.value) {
         alert("Please fill required fields.");
         return;
       }
 
-      const saName = sa.value;
+      const saName = saSelect.value;
       const saId = saIdByName[saName];
 
       if (!saId) {
-        errorMsg.innerText = "Error: SA ID not found for selected SA. Please check the SA list/mapping.";
+        errorMsg.innerText = "Error: SA ID not found for selected SA. Please check the SA list.";
         warnMsg.innerText = "";
         return;
       }
@@ -788,7 +759,7 @@
       district.value = "";
       channel.value = "";
       productSelect.value = "";
-      sa.value = "";
+      saSelect.value = "";
 
       parishInput.value = "";
       parishSelect.value = "";
@@ -835,7 +806,6 @@
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-
       } catch (e) {
         console.error(e);
         alert("Export failed. Check console for details.");
